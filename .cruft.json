@@ -1,0 +1,23 @@
+{
+  "template": "/Users/pradal/devlp/git/cookiecutter-openalea",
+  "commit": "5d8d8e429fd5cda47d7c730c4a51eac3ec0d0407",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "colzette",
+      "email": "Laurene.Perthame@inrae.fr",
+      "github_username": "openalea-incubator",
+      "project_name": "colzette",
+      "project_slug": "colzette",
+      "description": "A Parametric Model for oilseed rape and legume",
+      "pure_python": true,
+      "version": "0.0.1",
+      "_copy_without_render": [
+        ".github/workflows/openalea_ci.yml"
+      ],
+      "_template": "/Users/pradal/devlp/git/cookiecutter-openalea",
+      "_commit": "5d8d8e429fd5cda47d7c730c4a51eac3ec0d0407"
+    }
+  },
+  "directory": null
+}
