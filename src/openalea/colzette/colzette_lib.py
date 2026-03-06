@@ -1,5 +1,5 @@
 """
-SIMBAL shoot library
+Colzette library
 """
 
 from openalea.mtg import *
@@ -11,105 +11,360 @@ from numpy import *
 import numpy as np
 import openalea.plantgl.all as pgl
 import pandas as pd
-from itertools import cycle
+from openalea.mtg import turtle as turt
 from openalea.caribu.CaribuScene import CaribuScene
 
-def illuminate(scene, light=None, pattern=None, scene_unit='cm', north=0):
-    """Illuminate scene
+def generate_rapeseed_population(sowing_pattern,dict_params_rape, vec_TLA_rape, PlantAge_rape,iday):
+    list_of_MTGs = []
+    list_of_positions = []
+    nplants=len(sowing_pattern)
+    for id in range(0,nplants): 
+        print(id)   
+        xi = sowing_pattern['x'][id]*100
+        yi = sowing_pattern['y'][id]*100
+        gi = vegetative_rapeseed(DJ = PlantAge_rape,
+                                dict_params_rape=dict_params_rape,
+                                coord=[(xi,yi, 0)])
+        phenotype_rapeseed(gi,
+            total_surface=vec_TLA_rape[iday],
+            dict_params_rape=dict_params_rape)
+        
+        list_of_MTGs.append(gi.copy())
+        list_of_positions.append((xi,yi,0))
+    return list_of_MTGs, list_of_positions
 
-    Args:
-        scene: the scene (plantgl)
-        light: lights. If None a vertical light is used
-        pattern: the toric canopy pattern. If None, no pattern is used
-        scene_unit: string indicating length unit in the scene (eg 'cm')
-        north: the angle (deg, positive clockwise) from X+ to
-         North (default: 0)
+def generate_fababean_population(sowing_pattern,
+                                 dict_params_faba,
+                                 vec_TLA_faba,
+                                 PlantAge_faba,
+                                 iday):
+    list_of_MTGs = []
+    list_of_positions = []
+    nplants=len(sowing_pattern)
+    for id in range(0,nplants): 
+        print(id)   
+        xi = sowing_pattern['x'][id]*100
+        yi = sowing_pattern['y'][id]*100
+        gi = vegetative_fababean(DJ = PlantAge_faba,
+                                dict_params_faba=dict_params_faba,
+                                coord=[(xi,yi, 0)])
+        phenotype_fababean(gi,
+            total_surface=vec_TLA_faba[iday],
+            dict_params_faba=dict_params_faba)
+        
+        list_of_MTGs.append(gi.copy())
+        list_of_positions.append((xi,yi,0))
+    return list_of_MTGs, list_of_positions
 
-    Returns:
+def generate_mixture_population(sowing_pattern,
+                                dict_params_rape,
+                                dict_params_faba,
+                                vec_TLA_rape,
+                                vec_TLA_faba,
+                                PlantAge_rape,
+                                PlantAge_faba,
+                                iday):
+    list_of_MTGs = []
+    list_of_positions = []
+    nplants=len(sowing_pattern)
+    for id in range(0,nplants): 
+        print(id)   
+        xi = sowing_pattern['x'][id]*100
+        yi = sowing_pattern['y'][id]*100
+        if sowing_pattern['species'][id] == "Fababean":
+            gi = vegetative_fababean(DJ = PlantAge_faba,
+                                    dict_params_faba=dict_params_faba,
+                                    coord=[(xi,yi, 0)])
+            phenotype_fababean(gi,
+                total_surface=vec_TLA_faba[iday],
+                dict_params_faba=dict_params_faba)
+        else:
+            gi = vegetative_rapeseed(DJ = PlantAge_rape,
+                                    dict_params_rape=dict_params_rape,
+                                    coord=[(xi,yi, 0)])
+            phenotype_rapeseed(gi,
+                total_surface=vec_TLA_rape[iday],
+                dict_params_rape=dict_params_rape)            
+        
+        list_of_MTGs.append(gi.copy())
+        list_of_positions.append((xi,yi,0))
+    return list_of_MTGs, list_of_positions
 
-    """
-    infinite = False
-    if pattern is not None:
-        infinite = True
-    if light is not None:
-        #light = light_sources(*light, orientation=north)
-        light = [(light,(0,0,-1))] # zenith
-    cs = CaribuScene(scene, light=light,scene_unit=scene_unit, pattern=pattern)
-    raw, agg = cs.run(direct=True, simplify=True, infinite=infinite)
-    return cs, raw['Ei'], pd.DataFrame(agg)
+def create_rapeseed_scene(list_of_MTGs, list_of_positions):
+    # function 2 to compute final scene and new indices
+    # We initialize additional properties of scene_information:
+    list_rotation = []
+    # We initialize an indexer that will record the correspondance between the initial vid of the MTG and the new,
+    # unique indices of the scene:
+    shapes_indexer = {}
+    # We initialize a unique shape ID for new indexing across all plants in the scene
+    unique_shape_id = 1
 
-def build_scene(mtg, position=(0, 0, 0),
-                     orientation=0,
-                     leaf_material=None,
-                     stem_material=None,
-                     soil_material=None,
-                     colors=None):
-    """
-    Returns a plantgl scene from an mtg.
-    """
-    if not isinstance(mtg, list):
-        mtg = [mtg]
-    if not isinstance(position, list):
-        position=[position]
-    if not isinstance(orientation, list):
-        orientation=[orientation]
-    if colors is None:
-        if leaf_material is None:
-            leaf_material = Material(Color3(0, 180, 0))
-        if stem_material is None:
-            stem_material = Material(Color3(0, 130, 0))
-        if soil_material is None:
-            soil_material = Material(Color3(170, 85, 0))
-            # colors = g.property('color')
+    # We initialize a turtle in PlantGL:
+    turtle = turt.PglTurtle()
+    # We initialize the final scene:
+    final_scene = pgl.Scene()
+
+    for plant_index in range(0,len(list_of_positions)):
+        #print(plant_index)
+        # We access the MTG corresponding to the current plant index:
+        new_MTG = list_of_MTGs[plant_index]
+
+        # We initialize the indexer for the current plant:
+        shapes_indexer[plant_index] = {}
+
+        # We first define the seed of random, depending on the index of the plant:
+        np.random.seed(int(2.0 * plant_index))
+        # We then modify the angle of the plant, so that leaves are not oriented the same way within the population:
+        angle_roll = abs(np.random.normal(180, 180))
+        # We record this rotation in the scene information:
+        list_rotation.append(angle_roll)
+
+        # We reset the turtle:
+        turtle.reset()
+        # And we reposition the turtle from there:
+        turtle.move(list_of_positions[plant_index])
+        turtle.rollR(angle_roll)
+        # We create a scene for one plant by moving the turtle along the MTG:
+        scene = turt.TurtleFrame(new_MTG,
+                                    visitor=RapeseedVisitor,
+                                    turtle=turtle, gc=False)
+
+        scene_dict = scene.todict()
+        dict_organs = {}
+
+        for old_shape_id in scene_dict.keys():
+            shapes = scene_dict[old_shape_id]
+            if len(shapes)==1:
+                # internode shape
+                shape = shapes[0]
+                dict_organs[unique_shape_id] = 'Internode'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape.id = unique_shape_id
+                final_scene += shape
+                unique_shape_id += 1
+            elif len(shapes)==2:
+                # leaf shape with leaf + petiole
+                shape1 = shapes[0] # leaf
+                dict_organs[unique_shape_id] = 'Leaf'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape1.id = unique_shape_id
+                final_scene += shape1
+                unique_shape_id += 1
+
+                shape2 = shapes[1] # petiole
+                dict_organs[unique_shape_id] = 'Petiole'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape2.id = unique_shape_id
+                final_scene += shape2
+                unique_shape_id += 1
+    return final_scene, shapes_indexer
+
+def create_mixture_scene(list_of_MTGs, list_of_positions, sowing_pattern):
+    list_rotation = []
+    shapes_indexer = {}
+    unique_shape_id = 1
+    turtle = turt.PglTurtle()
+    final_scene = pgl.Scene()
+
+    for plant_index in range(0,len(list_of_positions)):
+        print(plant_index)
+        new_MTG = list_of_MTGs[plant_index]
+        shapes_indexer[plant_index] = {}
+        np.random.seed(int(2.0 * plant_index))
+        angle_roll = abs(np.random.normal(180, 180))
+        list_rotation.append(angle_roll)
+        turtle.reset()
+        turtle.move(list_of_positions[plant_index])
+        turtle.rollR(angle_roll)
+        if sowing_pattern['species'][plant_index] == "Fababean":
+            scene = turt.TurtleFrame(new_MTG,
+                                        visitor=FababeanVisitor,
+                                        turtle=turtle, gc=False)
+            scene_dict = scene.todict()
+            dict_organs = {}
+
+            for old_shape_id in scene_dict.keys():
+                shapes = scene_dict[old_shape_id]
+                shape = shapes[0]
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape.id = unique_shape_id
+                final_scene += shape
+                unique_shape_id += 1
+        else:
+            scene = turt.TurtleFrame(new_MTG,
+                                        visitor=RapeseedVisitor,
+                                        turtle=turtle, gc=False)
+            scene_dict = scene.todict()
+            dict_organs = {}
+
+        for old_shape_id in scene_dict.keys():
+            shapes = scene_dict[old_shape_id]
+            if len(shapes)==1:
+                # internode shape
+                shape = shapes[0]
+                dict_organs[unique_shape_id] = 'Internode'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape.id = unique_shape_id
+                final_scene += shape
+                unique_shape_id += 1
+            elif len(shapes)==2:
+                # leaf shape with leaf + petiole
+                shape1 = shapes[0] # leaf
+                dict_organs[unique_shape_id] = 'Leaf'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape1.id = unique_shape_id
+                final_scene += shape1
+                unique_shape_id += 1
+
+                shape2 = shapes[1] # petiole
+                dict_organs[unique_shape_id] = 'Petiole'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape2.id = unique_shape_id
+                final_scene += shape2
+                unique_shape_id += 1
+
+    return final_scene, shapes_indexer
 
 
-    scene = Scene()
+def create_fababean_scene(list_of_MTGs, list_of_positions):
+    list_rotation = []
+    shapes_indexer = {}
+    unique_shape_id = 1
+    turtle = turt.PglTurtle()
+    final_scene = pgl.Scene()
 
-    def geom2shape(vid, mesh, scene, colors, position, orientation, shape_id=None):
-        shape = None
-        if shape_id is None:
-            shape_id = vid
-        if isinstance(mesh, list):
-            for m in mesh:
-                geom2shape(vid, m, scene, colors, position, orientation)
-            return
-        if mesh is None:
-            return
-        if isinstance(mesh, Shape):
-            shape = mesh
-            mesh = mesh.geometry
-        label = labels.get(vid)
-        is_green = greeness.get(vid)
-        mesh = Translated(position, AxisRotated((0,0,1),orientation, mesh))
-        if colors:
-            shape = Shape(mesh, Material(Color3(*colors.get(vid, [0, 0, 0]))))
-        elif not greeness:
-            if not shape:
-                shape = Shape(mesh)
-        elif label.startswith('Stem') and is_green:
-            shape = Shape(mesh, stem_material)
-        elif label.startswith('Leaf') and is_green:
-            shape = Shape(mesh, leaf_material)
-        elif not is_green:
-            shape = Shape(mesh, soil_material)
-        shape.id = shape_id
+    for plant_index in range(0,len(list_of_positions)):
+        new_MTG = list_of_MTGs[plant_index]
+        shapes_indexer[plant_index] = {}
+        np.random.seed(int(2.0 * plant_index))
+        angle_roll = abs(np.random.normal(180, 180))
+        list_rotation.append(angle_roll)
+        turtle.reset()
+        turtle.move(list_of_positions[plant_index])
+        turtle.rollR(angle_roll)
+        scene = turt.TurtleFrame(new_MTG,
+                                    visitor=FababeanVisitor,
+                                    turtle=turtle, gc=False)
 
-        scene.add(shape)
+        scene_dict = scene.todict()
+        dict_organs = {}
 
-    nump = []
-    count = 0
-    for i, (g, p, o) in enumerate(zip(cycle(mtg), position, cycle(orientation))):
-        geometries = g.property('geometry')
-        greeness = g.property('is_green')
-        labels = g.property('label')
+        for old_shape_id in scene_dict.keys():
+            shapes = scene_dict[old_shape_id]
+            shape = shapes[0]
+            shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+            shape.id = unique_shape_id
+            final_scene += shape
+            unique_shape_id += 1
+    return final_scene, shapes_indexer
 
-        for vid, mesh in geometries.items():
-            geom2shape(vid, mesh, scene, colors, p, o, vid+count)
-            nump.append(i)
-        count += len(g)
+def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain):
+    zenith=[(RG_daily,(0,0,-1))]
+    cs = CaribuScene(scene=final_scene, light=zenith, scene_unit='cm', pattern=domain)
+    raw, agg = cs.run(infinite=True, simplify=True, direct=True)
 
-    return scene, nump
+    Eabs = agg["Eabs"]
+    area = agg["area"]
 
+    vec_Eabs = []
+    for plant_index in range(0, len(list_of_MTGs)):
+        g = list_of_MTGs[plant_index]
+        shapes_plant = shapes_indexer[plant_index]
+        g_indices = g.properties()['label']
+        g_indices_leaf = [k for k,v in g_indices.items() if v == 'Leaf']
+        new_indices_leaf = [k for k,v in shapes_plant.items() if v in g_indices_leaf]
+
+        new_indices_plant = shapes_plant.keys()
+        Eabs_plant = {k:v for k,v in Eabs.items() if k in new_indices_plant}
+        Eabs_leaves = {k:v for k,v in Eabs_plant.items() if k in new_indices_leaf}
+        area_plant = {k:v for k,v in area.items() if k in new_indices_plant}
+        area_leaves = {k:v for k,v in area_plant.items() if k in new_indices_leaf}
+
+        intercepted_light = sum([Eabs_leaves[k] * area_leaves[k] for k in Eabs_leaves]) # in J/cm2
+        vec_Eabs.append(intercepted_light)
+    return cs, vec_Eabs
+
+def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
+    if option_parameters == "Default":
+        params_fn_rape = data_dir / 'parameters' / 'global_params_rapeseed.csv'
+        params_fn_faba = data_dir / 'parameters' / 'global_params_fababean.csv'
+        df_par_rape = pd.read_csv(params_fn_rape,sep='\t')
+        df_par_faba = pd.read_csv(params_fn_faba,sep='\t')
+
+        if Type_simul == "monocrop_aviso" or Type_simul == "monocrop_vigo":
+            df_par = df_par_rape
+        elif Type_simul == "monocrop_faba":
+            df_par = df_par_faba
+        else:
+            df_par = pd.concat([df_par_rape, df_par_faba])
+
+        df_par = df_par[df_par['Level']=='Default']
+        dict_params = {} 
+        for sp in df_par['Species'].unique():
+            dict_params_sp = {}
+            df_par2 = df_par[df_par['Species']==sp]
+            for par in df_par2['Parameter'].unique():
+                dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
+            dict_params[sp] = dict_params_sp
+    elif option_parameters == "DOE_metamodel":
+        if Type_simul == "metamodel_rapeseed":
+            vec_species=['Rapeseed']
+        elif Type_simul == "metamodel_fababean":
+            vec_species = ['Fababean']
+        else:
+            vec_species = ['Rapeseed','Fababean']
+        dict_params = {}
+        for sp in vec_species:
+            # here in mixture select columns for species parameters, df_par = ...
+            df_par = par_DOE
+            # loop for sp in vec_species
+            dict_params_id = {}
+            for id in df_par.index:
+                df_par2 = df_par.iloc[id]
+                dict_params_sp = {}
+                for par in df_par2.keys():
+                    dict_params_sp[par] = df_par2[par]
+                    # here also set default parameter values
+                dict_params_id[id] = dict_params_sp
+            dict_params[sp] = dict_params_id
+    else:
+        params_fn_rape = data_dir / 'parameters' / 'type_params_rapeseed.csv'
+        params_fn_faba = data_dir / 'parameters' / 'type_params_fababean.csv'
+        df_par_rape = pd.read_csv(params_fn_rape,sep='\t')
+        df_par_faba = pd.read_csv(params_fn_faba,sep='\t')
+
+        if Type_simul == "monocrop_aviso" or Type_simul == "monocrop_vigo":
+            df_par = df_par_rape
+            df_par = df_par[df_par['Treatment'] == Type_simul]
+        elif Type_simul == "monocrop_faba":
+            df_par = df_par_faba
+            df_par = df_par[df_par['Treatment'] == Type_simul]
+        else:
+            if Type_simul == "intercrop_aviso_RRF":
+                Type_simul2 = "intercrop_faba_aviso_RRF"
+            elif Type_simul == "intercrop_aviso_RF":
+                Type_simul2 = "intercrop_faba_aviso_RF"
+            elif Type_simul == "intercrop_vigo":
+                Type_simul2 = "intercrop_faba_vigo"
+            df_par_rape = df_par_rape[df_par_rape['Treatment'] == Type_simul]
+            df_par_faba = df_par_faba[df_par_faba['Treatment'] == Type_simul2]
+            df_par = pd.concat([df_par_rape, df_par_faba])
+        
+        df_par = df_par[df_par['Level'] == 'Default']
+
+        dict_params = {}
+        for sp in df_par['Species'].unique():
+            dict_params_sp = {}
+            df_par2 = df_par[df_par['Species']==sp]
+            for par in df_par2['Parameter'].unique():
+                dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
+            if sp == 'Rapeseed':
+                dict_params_sp['phylloc'] = 0.016
+            else:
+                dict_params_sp['phylloc'] = 0.0128
+            dict_params[sp] = dict_params_sp
+    return(dict_params)
 
 def compute_thermal_time(vec_temp, idx_begin, Tb):
     vec_temp2 = vec_temp
@@ -154,7 +409,7 @@ def sowing_map(
 
     data = []
 
-    if type == "monocrop_aviso" or type == "monocrop_aviso":
+    if type == "monocrop_aviso" or type == "monocrop_vigo":
         for i, y in enumerate(ys):
             for x in xs:
                 data.append((x, y, 'Rapeseed'))
@@ -164,7 +419,7 @@ def sowing_map(
             for x in xs:
                 data.append((x, y, 'Fababean'))
 
-    elif type == "intercrop_aviso_RRF" or type == "intercrop_vigo_RRF" or type == "intercrop_aviso_RF" or type == "intercrop_vigo_RF" :
+    elif type == "intercrop_aviso_RRF" or type == "intercrop_vigo" or type == "intercrop_aviso_RF" :
         for i, y in enumerate(ys):
             species = species1 if i % 2 == 0 else species2
             for x in xs:
@@ -214,7 +469,13 @@ def get_nb_leaflets(rank):
     return nb_leaflets
 
 
-def multi_leaflets(nb_leaflets=5.0,leaf_surface=1.0, coeff_width=0.7, petiole_leaflet_length=2.0,coeff_petiole_d=0.5, stem_d=0.035):
+def multi_leaflets(nb_leaflets=5.0,
+                   leaf_surface=1.0,
+                   coeff_width=0.7, 
+                   petiole_leaflet_length1=2.0,
+                   petiole_leaflet_length2=2.0,
+                   coeff_petiole_d=0.5,
+                   stem_d=0.035):
     surface_leaflet = leaf_surface/nb_leaflets # each leaflet has the same surface
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
@@ -226,21 +487,22 @@ def multi_leaflets(nb_leaflets=5.0,leaf_surface=1.0, coeff_width=0.7, petiole_le
         nb_petiole = 1
     else:
         nb_petiole = (nb_leaflets)//2
-    petiole = Cylinder(radius=stem_d*coeff_petiole_d/2,height=petiole_leaflet_length*nb_petiole)
+    total_petiole_leaflet = petiole_leaflet_length1 + petiole_leaflet_length2*(nb_petiole-1)
+    petiole = Cylinder(radius=stem_d*coeff_petiole_d/2,height=total_petiole_leaflet)
     leaflet_left = AxisRotated(axis=(1,0,0),angle=-radians(60),geometry=leaflet)
     leaflet_right = AxisRotated(axis=(1,0,0),angle=radians(60),geometry=leaflet)
     leaflets = [petiole]
-    translate = [0,0,petiole_leaflet_length]
+    translate = [0,0,petiole_leaflet_length1]
     count_leaflets = nb_leaflets
     leaflets.append(Translated(translate,leaflet_left))
     leaflets.append(Translated(translate,leaflet_right))
     for i in range(nb_petiole):
         leaflets.append(Translated(translate,leaflet_left))
         leaflets.append(Translated(translate,leaflet_right))
-        translate[2] += petiole_leaflet_length
+        translate[2] += petiole_leaflet_length2
         count_leaflets -=2
     if count_leaflets == 1:
-        leaflets.append(Translated((0,0,petiole_leaflet_length*nb_petiole),leaflet))
+        leaflets.append(Translated((0,0,total_petiole_leaflet),leaflet))
     leafshape_fababean = Group(leaflets)
     return leafshape_fababean
 
@@ -263,15 +525,15 @@ class Plant:
         
         # Add a plant (scale is 1)
         vid = g.add_component(g.root, label='Plant')
-        vid = g.add_component(vid, label='Axis')
-        vid = g.add_component(vid, label='Phytomer')
+        #vid = g.add_component(vid, label='Axis')
+        #vid = g.add_component(vid, label='Phytomer')
         
         # Last scale
         vid = g.add_component(vid, label='Internode')
         leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-        bud_id = g.add_component(vid, edge_type='<', label='Bud')
+        #bud_id = g.add_component(vid, edge_type='<', label='Bud')
 
-        fat_mtg(g)
+        #fat_mtg(g)
         return g
 
     @staticmethod
@@ -293,44 +555,42 @@ class Plant:
 # Create MTGs for rapeseed and fababean
 def vegetative_rapeseed(
     DJ: int = 950,
-    growth_node: float= 0.00034,
-    phyllochrone = 0.015,
-    coord = [(0,0,0)]
+    dict_params_rape = {},
+    coord = (0,0,0)
     
     ):
     """ Build a field with nrows(coord) plants that have n_nodes internodes
 
     """
+    growth_node = dict_params_rape['growth_node']
+    phyllochrone = dict_params_rape['phylloc']
     n_nodes=int(round(DJ*phyllochrone))
     node_length = DJ * growth_node
-    above = g = MTG()
+    g = MTG()
+    
+    vid = g.add_component(g.root, label='Plant',edge_type='/',position=coord) #vid = vertex_id
+    #vid = g.add_component(vid, label='Axis')
 
-
-    for pl in coord:
-       
-        #print(pl)
-        vid = g.add_component(g.root, label='Plant',edge_type='/',position=pl) #vid = vertex_id
-        vid = g.add_component(vid, label='Axis')
-
-        pid = g.add_component(vid, label='Phytomer') #pid= phytomer_id
-        vid = g.add_component(pid, label='Internode') 
+    #pid = g.add_component(vid, label='Phytomer') #pid= phytomer_id
+    vid = g.add_child(vid, edge_type='<',label='Internode') 
+    g.node(vid).NodeLength = node_length
+    #g.node(vid).short = True
+    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
+    
+    for i in range(n_nodes-1):
+        vid = g.add_child(vid, edge_type='<', label='Internode') 
         g.node(vid).NodeLength = node_length
+        #pid = g.add_child(pid, edge_type='<', label='Phytomer')
+        #vid, pid = g.add_child_and_complex(vid, complex=pid, edge_type='<', label='Internode')
+        #g.node(vid).NodeLength = node_length
         #g.node(vid).short = True
+
         leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-        
-        for i in range(n_nodes-1):
-            pid = g.add_child(pid, edge_type='<', label='Phytomer')
-            vid, pid = g.add_child_and_complex(vid, complex=pid, edge_type='<', label='Internode')
-            g.node(vid).NodeLength = node_length
-            #g.node(vid).short = True
 
-            leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    return Plant(name='rapeseed', above = above)
+    return g
 
 def vegetative_rapeseed_plot(
-    growth_node_rape,
-    phylloc_rape,
+    dict_params_rape,
     sowing_pattern,
     PlantAge_rape,
     vec_TLA_rape,
@@ -340,161 +600,128 @@ def vegetative_rapeseed_plot(
     x0 = sowing_pattern['x'][0]*100
     y0 = sowing_pattern['y'][0]*100
     g0 = vegetative_rapeseed(DJ = PlantAge_rape,
-                             growth_node=growth_node_rape,
-                             phyllochrone=phylloc_rape,
+                             dict_params_rape=dict_params_rape,
                              coord=[(x0,y0, 0)]).above 
     phenotype_rapeseed(g0,
-        total_surface=vec_TLA_rape[iday],    
-        leaf_max = 0.6,
-        skew = 7,
-        phyllot=137.5,
-        ins_angle = 60,
-        leaf_angle=60,
-        coeff_width = 0.42,
-        coeff_petiole = 0.41)
+        total_surface=vec_TLA_rape[iday],
+        dict_params_rape=dict_params_rape)
 
     can = scene3d(g0,RapeseedVisitor)
-
-    mtgs = []
-    mtgs.append(g0)
-
-    positions = []
-    positions.append((x0,y0,0))
-
+    list_g = []
+    mtgs = {}
+    mtgs[0] = g0.properties()
     Temporary_res = g0.properties()
+    list_g.append(g0)
 
     # iterate on other plants
     for i in range(1,len(sowing_pattern)):
         xi = sowing_pattern['x'][i]*100
         yi = sowing_pattern['y'][i]*100 
         gi = vegetative_rapeseed(DJ = PlantAge_rape,
-                                 growth_node=growth_node_rape,
-                                 phyllochrone=0.016,
+                                 dict_params_rape=dict_params_rape,
                                  coord=[(xi,yi, 0)]).above 
-        positions.append((xi,yi,0))
         phenotype_rapeseed(gi,
-            total_surface=vec_TLA_rape[iday],    
-            leaf_max = 0.6,
-            skew = 7,
-            phyllot=137.5,
-            ins_angle = 60,
-            leaf_angle=60,
-            coeff_width = 0.42,
-            coeff_petiole = 0.41)
+            total_surface=vec_TLA_rape[iday],
+            dict_params_rape=dict_params_rape)
 
         cani = scene3d(gi,RapeseedVisitor)
+        list_g.append(gi)
         can = can + cani
-
         Temporary_res_i = gi.properties()
         Temporary_res = Temporary_res | Temporary_res_i
+        mtgs[i] = gi.properties()
+    return list_g, can, Temporary_res, mtgs
 
-        mtgs.append(gi)
-    return can, Temporary_res, mtgs, positions
 
-
-def total_height_fababean(DJ):
-    L = 36
-    k = 0.1
-    x0 = 600
+def total_height_fababean(DJ, dict_params_faba):
+    L = dict_params_faba['L_height']
+    k = dict_params_faba['k_height']
+    x0 = dict_params_faba['x0_height']
+    #L = 36
+    #k = 0.1
+    #x0 = 600
     total_height = L/(1+exp(-k*(DJ-x0)))
     return total_height
 
 def vegetative_fababean(
     DJ: int = 950,
     #node_length: float= 0.02,
-    phyllochrone = 0.015,
+    dict_params_faba = {},
     coord = [(0,0,0)]
     
     ):
     """ Build a field with nrows(coord) plants that have n_nodes internodes
 
     """
+    phyllochrone = dict_params_faba['phylloc']
     n_nodes=int(round(DJ*phyllochrone))
-    total_height = total_height_fababean(DJ)
+    total_height = total_height_fababean(DJ,dict_params_faba)
     node_length = total_height / n_nodes # equal height distribution among internodes
 
-    above = g = MTG()
-
-
-    for pl in coord:
-       
-        #print(pl)
-        vid = g.add_component(g.root, label='Plant',edge_type='/',position=pl) #vid = vertex_id
-        vid = g.add_component(vid, label='Axis')
-
-        pid = g.add_component(vid, label='Phytomer') #pid= phytomer_id
-        vid = g.add_component(pid, label='Internode') 
+    g = MTG()
+    vid = g.add_component(g.root,
+                          label='Plant',
+                          edge_type='/',
+                          position=coord) #vid = vertex_id
+    
+    vid = g.add_child(vid, edge_type='<',label='Internode') 
+    g.node(vid).NodeLength = node_length
+    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
+    
+    for i in range(n_nodes-1):
+        vid = g.add_child(vid, edge_type='<', label='Internode')
         g.node(vid).NodeLength = node_length
-        #g.node(vid).short = True
         leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-        
-        for i in range(n_nodes-1):
-            pid = g.add_child(pid, edge_type='<', label='Phytomer')
-            vid, pid = g.add_child_and_complex(vid, complex=pid, edge_type='<', label='Internode')
-            g.node(vid).NodeLength = node_length
-            #g.node(vid).short = True
 
-            leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    return Plant(name='fababean', above = above)
+    return g
 
 def vegetative_fababean_plot(
-    phylloc_faba,
+    dict_params_faba,
     sowing_pattern,
     PlantAge_faba,
     vec_TLA_faba,
     iday):
 
-    list_g = {}
 
     # initialize plot with 1st plant
     x0 = sowing_pattern['x'][0]*100
     y0 = sowing_pattern['y'][0]*100
     g0 = vegetative_fababean(DJ = PlantAge_faba,
-                             phyllochrone=phylloc_faba,
+                             dict_params_faba=dict_params_faba,
                              coord=[(x0,y0, 0)]).above 
     phenotype_fababean(g0,
-        total_surface=vec_TLA_faba[iday],    
-        leaf_max = 0.61,
-        skew = 1.48,
-        phyllot=163.5,
-        ins_angle = 40,
-        leaf_angle=110,
-        coeff_width = 0.7,
-        coeff_petiole = 0.9,
-        stem_d = 0.1,
-        coeff_petiole_d = 0.8)
+        total_surface=vec_TLA_faba[iday],
+        dict_params_faba=dict_params_faba) 
+    
+    can = scene3d(g0,FababeanVisitor)
+    list_g = []
+    mtgs = {}
+    mtgs[0] = g0.properties()
+    Temporary_res = g0.properties()
     list_g.append(g0)
-    can = scene3d(g0,RapeseedVisitor)
 
     # iterate on other plants
     for i in range(1,len(sowing_pattern)):
         xi = sowing_pattern['x'][i]*100
         yi = sowing_pattern['y'][i]*100 
         gi = vegetative_fababean(DJ = PlantAge_faba,
-                             phyllochrone=phylloc_faba,
+                             dict_params_faba=dict_params_faba,
                              coord=[(xi,yi, 0)]).above 
         phenotype_fababean(gi,
-            total_surface=vec_TLA_faba[iday],    
-            leaf_max = 0.61,
-            skew = 1.48,
-            phyllot=163.5,
-            ins_angle = 40,
-            leaf_angle=110,
-            coeff_width = 0.7,
-            coeff_petiole = 0.9,
-            stem_d = 0.1,
-            coeff_petiole_d = 0.8)
+            total_surface=vec_TLA_faba[iday],
+            dict_params_faba=dict_params_faba)
 
         cani = scene3d(gi,FababeanVisitor)
         list_g.append(gi)
         can = can + cani
-    return list_g, can
+        Temporary_res_i = gi.properties()
+        Temporary_res = Temporary_res | Temporary_res_i
+        mtgs[i] = gi.properties()
+    return list_g, can, Temporary_res, mtgs
 
 def vegetative_mixture_plot(
-    phylloc_rape,
-    phylloc_faba,
-    growth_node_rape,
+    dict_params_rape,
+    dict_params_faba,
     sowing_pattern,
     PlantAge_rape,
     PlantAge_faba,
@@ -509,40 +736,32 @@ def vegetative_mixture_plot(
     y0 = sowing_pattern['y'][0]*100
     if sowing_pattern['species'][0] == "Fababean":
         g0 = vegetative_fababean(DJ = PlantAge_faba,
-                                phyllochrone=phylloc_faba,
+                                 dict_params_faba=dict_params_faba,
                                 coord=[(x0,y0, 0)]).above 
         phenotype_fababean(g0,
-            total_surface=vec_TLA_faba[iday],    
-            leaf_max = 0.61,
-            skew = 1.48,
-            phyllot=163.5,
-            ins_angle = 40,
-            leaf_angle=110,
-            coeff_width = 0.7,
-            coeff_petiole = 0.9,
-            stem_d = 0.1,
-            coeff_petiole_d = 0.8)
-        list_g.append(g0)
-        Temporary_res = g0.properties()
+            total_surface=vec_TLA_faba[iday],
+            dict_params_faba=dict_params_faba) 
+
         can = scene3d(g0,RapeseedVisitor)
+        list_g = []
+        mtgs = {}
+        mtgs[0] = g0.properties()
+        Temporary_res = g0.properties()
+        list_g.append(g0)
     else:
         g0 = vegetative_rapeseed(DJ = PlantAge_rape,
-                             growth_node=growth_node_rape,
-                             phyllochrone=phylloc_rape,
+                                 dict_params_rape=dict_params_rape,
                              coord=[(x0,y0, 0)]).above 
         phenotype_rapeseed(g0,
-            total_surface=vec_TLA_rape[iday],    
-            leaf_max = 0.6,
-            skew = 7,
-            phyllot=137.5,
-            ins_angle = 60,
-            leaf_angle=60,
-            coeff_width = 0.42,
-            coeff_petiole = 0.41)
+            total_surface=vec_TLA_rape[iday],   
+            dict_params_rape=dict_params_rape) 
 
-        list_g.append(g0)
-        Temporary_res = g0.properties()
         can = scene3d(g0,RapeseedVisitor)
+        list_g = []
+        mtgs = {}
+        mtgs[0] = g0.properties()
+        Temporary_res = g0.properties()
+        list_g.append(g0)
 
     # iterate on other plants
     for i in range(1,len(sowing_pattern)):
@@ -551,47 +770,36 @@ def vegetative_mixture_plot(
 
         if sowing_pattern['species'][i] == "Fababean":
             gi = vegetative_fababean(DJ = PlantAge_faba,
-                                phyllochrone=phylloc_faba,
+                                     dict_params_faba=dict_params_faba,
                                 coord=[(xi,yi, 0)]).above 
             phenotype_fababean(gi,
-                total_surface=vec_TLA_faba[iday],    
-                leaf_max = 0.61,
-                skew = 1.48,
-                phyllot=163.5,
-                ins_angle = 40,
-                leaf_angle=110,
-                coeff_width = 0.7,
-                coeff_petiole = 0.9,
-                stem_d = 0.1,
-                coeff_petiole_d = 0.8)
+                total_surface=vec_TLA_faba[iday],
+                dict_params_faba=dict_params_faba)
 
             cani = scene3d(gi,FababeanVisitor)
-            Temporary_res_i = gi.properties()
-            Temporary_res = Temporary_res | Temporary_res_i
-            list_g.append(gi)
             can = can + cani
+            list_g = []
+            mtgs = {}
+            mtgs[0] = g0.properties()
+            Temporary_res = g0.properties()
+            list_g.append(g0)
 
         else:
             gi = vegetative_rapeseed(DJ = PlantAge_rape,
-                                 growth_node=growth_node_rape,
-                                 phyllochrone=phylloc_rape,
+                                     dict_params_rape=dict_params_rape,
                                  coord=[(xi,yi, 0)]).above 
             phenotype_rapeseed(gi,
-                total_surface=vec_TLA_rape[iday],    
-                leaf_max = 0.6,
-                skew = 7,
-                phyllot=137.5,
-                ins_angle = 60,
-                leaf_angle=60,
-                coeff_width = 0.42,
-                coeff_petiole = 0.41)
+                total_surface=vec_TLA_rape[iday],
+                dict_params_rape=dict_params_rape)
 
             cani = scene3d(gi,RapeseedVisitor)
-            Temporary_res_i = gi.properties()
-            Temporary_res = Temporary_res | Temporary_res_i
-            list_g.append(gi)
             can = can + cani
-    return list_g, can, Temporary_res
+            list_g = []
+            mtgs = {}
+            mtgs[0] = g0.properties()
+            Temporary_res = g0.properties()
+            list_g.append(g0)
+    return list_g, can, Temporary_res, mtgs
 
 
 def update_MTG(g, outputs):
@@ -619,17 +827,8 @@ def bell_shaped_dist(total_area=1, nb_phy=15, rmax=.7, skewness=5):
 
 
 def phenotype_rapeseed(g,
-    leaf_max: float=0.6587057,
-    skew: float=5,  
-    phyllot : float = 137.5,
-    ins_angle : float = 60,
-    leaf_angle : float = 80, #à mesurer expérimentallement 
-    total_surface: float=300, 
-    coeff_width: float =0.831562, 
-    coeff_petiole: float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
-    stem_d: float=0.1,
-    coeff_petiole_d : float=0.5
-    ): 
+                       total_surface = 200,
+                       dict_params_rape = {}): 
     """
     applies phenotypical attributes to an MTG based on parameters. 
         leaf_max : [float between 0 and 1] Expectation of the bell curve => Position of the biggest leaf along the stem.
@@ -642,6 +841,15 @@ def phenotype_rapeseed(g,
         stem_d: [float, cm] stem diameter
         coeff_petiole_d : [float] petiole diameter / stem diameter ration 
     """
+    leaf_max = dict_params_rape['rmax'] # float=0.6587057,
+    skew = dict_params_rape['k'] # float=5,  
+    phyllot = dict_params_rape['phyllot'] # float = 137.5,
+    ins_angle = dict_params_rape['ins_angle'] # float = 60,
+    leaf_angle = 80.0 #à mesurer expérimentallement 
+    coeff_width = dict_params_rape['coeff_width_leaf'] #float =0.831562, 
+    coeff_petiole = dict_params_rape['coeff_petiole_leaf'] #float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
+    stem_d = 0.1
+    coeff_petiole_d = 0.5
 
     sortie=dict()
     plants=[k for k, v in g.properties()['label'].items()  if v=='Plant']
@@ -654,6 +862,7 @@ def phenotype_rapeseed(g,
     surface = bell_shaped_dist(total_area=1, nb_phy=int(len(leaves)/len(plants)), rmax=leaf_max, skewness=skew)
     sortie['SurfaceRepartition']=dict(zip(leaves,surface*len(leaves)))
     sortie['LeafSurface']=dict(zip(leaves,[element * total_surface for element in surface]*len(leaves)))
+    
 
 
     sortie['LeafLength']= dict(zip(leaves,
@@ -667,7 +876,7 @@ def phenotype_rapeseed(g,
     sortie['InsertionAngle']=dict(zip(leaves,[ins_angle]*len(leaves)))
     sortie['LeafAngle']=dict(zip(leaves,[leaf_angle]*len(leaves)))
     sortie['Phyllotaxy']=dict(zip(internodes,[phyllot]*len(internodes)))
-    sortie['Phyllotaxy'].update(dict(zip(leaves,[0]*len(leaves))))
+    sortie['Phyllotaxy'].update(dict(zip(leaves,[phyllot]*len(leaves))))
 
     sortie['StemDiam']=dict(zip(internodes,[stem_d]*len(internodes)))
     sortie['PetioleDiam']=dict(zip(leaves,[stem_d*coeff_petiole_d]*len(leaves)))
@@ -676,17 +885,8 @@ def phenotype_rapeseed(g,
     update_MTG(g,sortie)
 
 def phenotype_fababean(g,
-    leaf_max: float=0.6587057,
-    skew: float=5,  
-    phyllot : float = 137.5,
-    ins_angle : float = 60,
-    leaf_angle : float = 80, #à mesurer expérimentallement 
-    total_surface: float=300, 
-    coeff_width: float =0.831562, 
-    coeff_petiole: float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
-    stem_d: float=0.1,
-    coeff_petiole_d : float=0.5
-    ): 
+                       total_surface: float=300,
+                       dict_params_faba={}):
     """
     applies phenotypical attributes to an MTG based on parameters. 
         leaf_max : [float between 0 and 1] Expectation of the bell curve => Position of the biggest leaf along the stem.
@@ -700,6 +900,18 @@ def phenotype_fababean(g,
         coeff_petiole_d : [float] petiole diameter / stem diameter ration 
     """
 
+    leaf_max = dict_params_faba['rmax'] #float=0.6587057
+    skew = dict_params_faba['k'] # float=5
+    phyllot = dict_params_faba['phyllot'] # float = 163.5
+    ins_angle = dict_params_faba['ins_angle'] # float = 60
+    leaf_angle : float = 110 #à mesurer expérimentallement
+    coeff_width1 = dict_params_faba['coeff_width_leaflet1'] # float =0.831562
+    coeff_width2 = dict_params_faba['coeff_width_leaflet2'] # float =0.831562
+    coeff_petiole_leaflet1 = dict_params_faba['coeff_petiole_leaflet1'] # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
+    coeff_petiole_leaflet2 = dict_params_faba['coeff_petiole_leaflet2'] # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
+    stem_d = 0.1
+    coeff_petiole_d = 0.8
+
     sortie=dict()
     plants=[k for k, v in g.properties()['label'].items()  if v=='Plant']
     leaves=[k for k, v in g.properties()['label'].items()  if v=='Leaf']
@@ -708,25 +920,29 @@ def phenotype_fababean(g,
     nb_leaflets = [get_nb_leaflets(ri) for ri in ranks]
     
     sortie['Nb_leaflets']=dict(zip(leaves, nb_leaflets))
-    sortie['coeff_width'] = dict(zip(plants,[coeff_width]*len(plants)))
-    sortie['coeff_petiole_d'] = dict(zip(plants,[coeff_petiole_d]*len(plants)))
-    sortie['stem_d'] = dict(zip(plants,[stem_d]*len(plants)))
+    vec_coeff_width = [coeff_width1]*2 + [coeff_width2]*(len(leaves)-2)
+    sortie['coeff_width'] = dict(zip(leaves, vec_coeff_width))
+    #sortie['coeff_width'] = dict(zip(plants,[coeff_width]*len(plants)))
+    sortie['coeff_petiole_d'] = dict(zip(leaves,[coeff_petiole_d]*len(leaves)))
+    sortie['stem_d'] = dict(zip(leaves,[stem_d]*len(leaves)))
     surface = bell_shaped_dist(total_area=1, nb_phy=int(len(leaves)/len(plants)), rmax=leaf_max, skewness=skew)
-    sortie['SurfaceRepartition']=dict(zip(leaves,surface*len(leaves)))
-    sortie['LeafSurface']=dict(zip(leaves,[element * total_surface for element in surface]*len(leaves)))
-    sortie['LeafletSurface']=dict(zip(leaves,[surface[i] * total_surface/nb_leaflets[i] for i in range(0,len(surface))]*len(leaves)))
-    sortie['LeafLength']= dict(zip(leaves,
-             [2*(element/(coeff_width*pi))**(0.5) for element in sortie['LeafSurface'].values()]*len(leaves)))
-    leaflet_length = [2*(element/(coeff_width*pi))**(0.5) for element in sortie['LeafletSurface'].values()]
-    sortie['LeafletLength']= dict(zip(leaves,leaflet_length*len(leaves)))
+    sortie['SurfaceRepartition']=dict(zip(surface,leaves))
+    sortie['LeafSurface']=dict(zip(leaves,[element * total_surface for element in surface]))
+    vec_leaflet_surface = [surface[i] * total_surface/nb_leaflets[i] for i in range(0,len(surface))]
+    sortie['LeafletSurface']=dict(zip(leaves, vec_leaflet_surface))
+    #sortie['LeafLength']= dict(zip(leaves,vec_leaflet_length))
+    vec_leaflet_length = [2*(vec_leaflet_surface[i]/(vec_coeff_width[i]*pi))**(0.5) for i in range(0,len(vec_leaflet_surface))]
+    #leaflet_length = [2*(element/(coeff_width*pi))**(0.5) for element in sortie['LeafletSurface'].values()]
+    sortie['LeafletLength']= dict(zip(leaves,vec_leaflet_length))
 
-    sortie['LeafWidth']=dict(zip(leaves,
-                     [element *coeff_width for element in sortie['LeafLength'].values()]*len(leaves)))
-    sortie['LeafletWidth']=dict(zip(leaves,
-                    [element *coeff_width for element in sortie['LeafletLength'].values()]*len(leaves)))
-    sortie['SurfTheo']=dict(zip(leaves,[pi*(leaflet_length[i]/2)*(coeff_width*leaflet_length[i]/2)*nb_leaflets[i] for i in range(0,len(leaflet_length))]*len(leaves)))
-    sortie['PetioleLength']=dict(zip(leaves,[element * coeff_petiole for element in sortie['LeafletLength'].values()]*len(leaves)))
-    
+    #sortie['LeafWidth']=dict(zip(leaves,
+    #                 [element *coeff_width for element in sortie['LeafLength'].values()]*len(leaves)))
+    vec_leaflet_width = [vec_leaflet_length[i] *vec_coeff_width[i] for i in range(0,len(vec_leaflet_length))]
+    sortie['LeafletWidth']=dict(zip(leaves,vec_leaflet_width))
+    vec_surftheo = [pi*(vec_leaflet_length[i]/2)*(vec_coeff_width[i]*vec_leaflet_length[i]/2)*nb_leaflets[i] for i in range(0,len(vec_leaflet_length))]
+    sortie['SurfTheo']=dict(zip(leaves,vec_surftheo))
+    sortie['PetioleLength1']=dict(zip(leaves,[element * coeff_petiole_leaflet1 for element in sortie['LeafletLength'].values()]))
+    sortie['PetioleLength2']=dict(zip(leaves,[element * coeff_petiole_leaflet2 for element in sortie['LeafletLength'].values()]))    
     sortie['InsertionAngle']=dict(zip(leaves,[ins_angle]*len(leaves)))
     sortie['LeafAngle']=dict(zip(leaves,[leaf_angle]*len(leaves)))
     sortie['Phyllotaxy']=dict(zip(internodes,[phyllot]*len(internodes)))
@@ -758,22 +974,22 @@ def RapeseedVisitor(
     #retrieve the node and its label 
     nid = g.node(v)
     label = g.label(v)
+    turtle.setId(v)
 
-    if nid.parent() is None:#this is a new plant base
-        p = nid.complex_at_scale(scale=1)
+    #if nid.parent() is None:#this is a new plant base
+    #    p = nid.complex_at_scale(scale=1)
         #print('plant no',p)
-        if 'position' in p.properties():
+    #    if 'position' in p.properties():
             #print (p.label, 'moving to ', p.position)
-            turtle.move(list(map(float,p.position)))
-        else:
-            print('standing still')
-            turtle.move(0,0,0)
+    #        turtle.move(list(map(float,p.position)))
+    #    else:
+    #        print('standing still')
+    #        turtle.move(0,0,0)
 
-        if 'azimuth' in p.properties():
-            turtle.rollR(p.azimuth)
-    
-    turtle.rollL(nid.Phyllotaxy)
-    #print(nid.Phyllotaxy)
+        #if 'azimuth' in p.properties():
+            #turtle.rollR(p.azimuth)
+    if label != 'Plant':
+        turtle.rollL(nid.Phyllotaxy)
     #turtle.rollL(137.5)
 
     if g.edge_type(v) == '+':
@@ -789,7 +1005,7 @@ def RapeseedVisitor(
         
         turtle.setColor(2)
 
-        #turtle.F(nid.PetioleLength)
+        turtle.F(nid.PetioleLength)
 
         turtle.setColor(3)
         
@@ -804,7 +1020,6 @@ def RapeseedVisitor(
         turtle.setColor(1)
         turtle.F(nid.NodeLength)
 
-    turtle.setId(v)
 
 
 def FababeanVisitor(
@@ -825,30 +1040,27 @@ def FababeanVisitor(
     #retrieve the node and its label 
     nid = g.node(v)
     label = g.label(v)
+    turtle.setId(v)
     plant_id = g.complex_at_scale(v,scale=1)
     coeff_width=g.node(plant_id).coeff_width
     coeff_petiole_d=g.node(plant_id).coeff_petiole_d
     stem_d=g.node(plant_id).stem_d
-
-    if nid.parent() is None:#this is a new plant base
-        p = nid.complex_at_scale(scale=1)
-        if 'position' in p.properties():
-            turtle.move(list(map(float,p.position)))
-        else:
-            print('standing still')
-            turtle.move(0,0,0)
-
-        if 'azimuth' in p.properties():
-            turtle.rollR(p.azimuth)
     
-    turtle.rollL(nid.Phyllotaxy)
+    #turtle.rollL(nid.Phyllotaxy)
+    turtle.rollL(163.5)
 
     if g.edge_type(v) == '+':
         
         turtle.setWidth(nid.PetioleDiam)
         if label == 'Leaf':
             nb_leaflets = nid.Nb_leaflets
-            leafscale = multi_leaflets(nb_leaflets=int(nb_leaflets), leaf_surface=nid.LeafSurface, coeff_width=coeff_width, petiole_leaflet_length=nid.PetioleLength,coeff_petiole_d=coeff_petiole_d, stem_d=stem_d)
+            leafscale = multi_leaflets(nb_leaflets=int(nb_leaflets),
+                                       leaf_surface=nid.LeafSurface,
+                                       coeff_width=nid.coeff_width,
+                                       petiole_leaflet_length1=nid.PetioleLength1,
+                                       petiole_leaflet_length2=nid.PetioleLength2,
+                                       coeff_petiole_d=coeff_petiole_d,
+                                       stem_d=stem_d)
         
         turtle.down(nid.InsertionAngle)
         
@@ -863,7 +1075,6 @@ def FababeanVisitor(
         turtle.setColor(1)
         turtle.F(nid.NodeLength)
 
-    turtle.setId(v)
 
 #Scene creation
 
