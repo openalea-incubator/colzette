@@ -1,7 +1,7 @@
 name: colzette_dev
 channels:
-  - conda-forge
   - openalea3
+  - conda-forge
 dependencies:
   - python
   - pip

@@ -1,3 +1,3 @@
 import pytest
 
-from colzette import colzette
+from openalea.colzette.colzette_lib import *
