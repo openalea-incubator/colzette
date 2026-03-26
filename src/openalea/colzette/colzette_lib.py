@@ -98,61 +98,6 @@ def compute_thermal_time(vec_temp, idx_begin, Tb):
     vec_TT = vec_temp2.cumsum()
     return vec_TT
 
-def get_domain(density, nb_plantes):
-    inter_row=np.sqrt(1/density)
-    inter_plant = 1. / inter_row / density
-    if nb_plantes == 1:
-        nrow=1
-    else:
-        nrow = np.max([1, int(np.sqrt(nb_plantes))])
-    dx = inter_plant * 100
-    dy = inter_row * 100
-    nx = int(nb_plantes/nrow)
-    ny = nrow
-    domain = ((0,0),(nx*dx, ny*dy))
-    return domain
-
-def sowing_map(
-    length,
-    width,
-    density,
-    type = "monocrop_aviso"):
-
-    """
-    length, width : plot dimensions (m)
-    density : plants per m²
-    species1, species2 : names of the two species
-    """
-    
-    species1="Rapeseed"
-    species2="Fababean"
-
-    pas = np.sqrt(1 / density)
-
-    xs = np.arange(pas / 2, length, pas)
-    ys = np.arange(pas / 2, width, pas)
-
-    data = []
-
-    if type == "monocrop_aviso" or type == "monocrop_vigo":
-        for i, y in enumerate(ys):
-            for x in xs:
-                data.append((x, y, 'Rapeseed'))
-
-    elif type == "monocrop_fababean":
-        for i, y in enumerate(ys):
-            for x in xs:
-                data.append((x, y, 'Fababean'))
-
-    elif type == "intercrop_aviso_RRF" or type == "intercrop_vigo" or type == "intercrop_aviso_RF" :
-        for i, y in enumerate(ys):
-            species = species1 if i % 2 == 0 else species2
-            for x in xs:
-                data.append((x, y, species))
-
-    data2 = pd.DataFrame(data, columns=["x", "y", "species"])  
-    return data2
-
 def get_nb_leaflets(rank):
     if rank <= 6:
         nb_leaflets = 2.0
