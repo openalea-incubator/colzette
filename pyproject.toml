@@ -12,8 +12,8 @@ where = ["src"]
 [tool.setuptools]
 include-package-data = false # force explicit declaration of data (disable automatic inclusion)
 
-[tool.setuptools.package-data]
-"openalea.colzette" = ["data/**/*"]
+#[tool.setuptools.package-data]
+#"openalea.colzette" = ["data/**/*"]
 
 # enable dynamic version based on git tags
 [tool.setuptools_scm]
