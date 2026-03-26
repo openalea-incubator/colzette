@@ -1,16 +1,15 @@
-import sys
-import pandas 
+
 import time
 from pathlib import Path # deal with paths in python 3
-from openalea.mtg import *
-from openalea.mtg.turtle import *
-from openalea.plantgl import all as pgl
-from openalea.plantgl.all import *
-from openalea.plantgl.all import Vector3, Color3, Scaled, Viewer
-import openalea.plantgl.all as pgl
-from openalea.caribu.CaribuScene import CaribuScene
+
+import pandas
+
+from openalea.colzette.colzette import compute_thermal_time, df_to_dict
+from openalea.colzette.population import generate_rapeseed_population
+from openalea.colzette.light import light_interception
+from openalea.colzette.scene import create_rapeseed_scene, sowing_map, get_domain
+
 root_project_dir = Path('.').absolute().parent
-from openalea.colzette.colzette_lib import * 
 
 start_time = time.time()
 data_dir = root_project_dir / 'data'
@@ -52,7 +51,7 @@ dict_params = df_to_dict(data_dir,option_parameters,Type_simul,"")
 density=33.0
 iday=84
 
-#setting_PGLViewer(width=1200, height=900,
+# setting_PGLViewer(width=1200, height=900,
 #                x_center=0., y_center=0., z_center=0.,
 #                x_cam=0., y_cam=0., z_cam=200,
 #                grid=False,

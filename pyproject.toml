@@ -12,8 +12,8 @@ where = ["src"]
 [tool.setuptools]
 include-package-data = false # force explicit declaration of data (disable automatic inclusion)
 
-[tool.setuptools.package-data]
-"openalea.pkg_name" = ["data/**/*"]
+#[tool.setuptools.package-data]
+#"openalea.colzette" = ["data/**/*"]
 
 # enable dynamic version based on git tags
 [tool.setuptools_scm]
@@ -47,6 +47,8 @@ classifiers = [
 # you can list here all dependencies that are pip-instalable, and that have a name identical to the one used by conda (to allow reuse of this list in meta.yaml)
 # If conda name is different, please do not declare the pip name, and declare conda name in the next section
 dependencies = [
+    "numpy",
+    "pandas",
 ]
 
 [project.optional-dependencies]
@@ -76,14 +78,17 @@ channels = [
   "conda-forge"
 ]
 dependencies = [
+    "openalea.mtg",
+    "openalea.plantgl",
+    "openalea.caribu",
 ]
 
 [project.urls]
-Repository = "https://github.com/openalea/colzette"
-Homepage = "https://colzette.readthedocs.io/"
-"Bug Tracker" = "https://github.com/openalea/colzette/issues"
-Discussions = "https://github.com/openalea/colzette/discussions"
-Changelog = "https://github.com/openalea/colzette/releases"
+Repository = "https://github.com/openalea-incubator/colzette"
+Homepage = "https://github.com/openalea-incubator/colzette"
+"Bug Tracker" = "https://github.com/openalea/colzette-incubator/issues"
+Discussions = "https://github.com/openalea/colzette-incubator/discussions"
+Changelog = "https://github.com/openalea/colzette-incubator/releases"
 
 [project.entry-points."wralea"]
-"my_pkg" = "openalea.colzette_wralea"
+"colzette" = "openalea.colzette_wralea"
