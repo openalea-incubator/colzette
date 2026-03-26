@@ -1,6 +1,5 @@
-import pytest
 
-from openalea.colzette.colzette_lib import get_nb_leaflets
+from openalea.colzette.colzette import get_nb_leaflets
 
 def test_get_nb_leaflets():
 

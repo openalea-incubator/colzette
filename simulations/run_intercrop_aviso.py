@@ -1,11 +1,13 @@
-import pandas
+
 import time
 from pathlib import Path # deal with paths in python 3
 
-from openalea.colzette.colzette_lib import compute_thermal_time, df_to_dict, sowing_map, get_domain
+import pandas
+
+from openalea.colzette.colzette import compute_thermal_time, df_to_dict
 from openalea.colzette.population import generate_mixture_population
 from openalea.colzette.light import light_interception
-from openalea.colzette.scene import create_mixture_scene
+from openalea.colzette.scene import create_mixture_scene, sowing_map, get_domain
 
 root_project_dir = Path('.').absolute().parent
 

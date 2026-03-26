@@ -10,7 +10,7 @@ import openalea.plantgl.all as pgl
 
 from openalea.mtg import MTG
 
-from openalea.colzette.colzette_lib import update_MTG, bell_shaped_dist, get_nb_leaflets
+from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets
 
 def RapeseedVisitor(
         g,
