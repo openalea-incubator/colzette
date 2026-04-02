@@ -5,9 +5,9 @@ colzette module related turtle and visitor to build plant geometry
 import numpy as np
 
 from math import pi, radians
+from functools import partial
 
 import openalea.plantgl.all as pgl
-
 from openalea.mtg import MTG
 
 from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets
@@ -191,74 +191,6 @@ def make_leaflet_shape_fababean():
     return(leafletshape_fababean)
 
 # Create MTGs for rapeseed and fababean
-def vegetative_rapeseed(
-        DJ: int = 950,
-        dict_params_rape={},
-        coord=(0, 0, 0)
-
-):
-    """ Build a field with nrows(coord) plants that have n_nodes internodes
-
-    """
-    growth_node = dict_params_rape['growth_node']
-    phyllochrone = dict_params_rape['phylloc']
-    n_nodes = int(round(DJ * phyllochrone))
-    node_length = DJ * growth_node
-    g = MTG()
-
-    vid = g.add_component(g.root, label='Plant', edge_type='/', position=coord)  # vid = vertex_id
-    # vid = g.add_component(vid, label='Axis')
-
-    # pid = g.add_component(vid, label='Phytomer') #pid= phytomer_id
-    vid = g.add_child(vid, edge_type='<', label='Internode')
-    g.node(vid).NodeLength = node_length
-    # g.node(vid).short = True
-    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    for i in range(n_nodes - 1):
-        vid = g.add_child(vid, edge_type='<', label='Internode')
-        g.node(vid).NodeLength = node_length
-        # pid = g.add_child(pid, edge_type='<', label='Phytomer')
-        # vid, pid = g.add_child_and_complex(vid, complex=pid, edge_type='<', label='Internode')
-        # g.node(vid).NodeLength = node_length
-        # g.node(vid).short = True
-
-        leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    return g
-
-def vegetative_fababean(
-        DJ: int = 950,
-        # node_length: float= 0.02,
-        dict_params_faba={},
-        coord=[(0, 0, 0)]
-
-):
-    """ Build a field with nrows(coord) plants that have n_nodes internodes
-
-    """
-    phyllochrone = dict_params_faba['phylloc']
-    n_nodes = int(round(DJ * phyllochrone))
-    total_height = total_height_fababean(DJ, dict_params_faba)
-    node_length = total_height / n_nodes  # equal height distribution among internodes
-
-    g = MTG()
-    vid = g.add_component(g.root,
-                          label='Plant',
-                          edge_type='/',
-                          position=coord)  # vid = vertex_id
-
-    vid = g.add_child(vid, edge_type='<', label='Internode')
-    g.node(vid).NodeLength = node_length
-    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    for i in range(n_nodes - 1):
-        vid = g.add_child(vid, edge_type='<', label='Internode')
-        g.node(vid).NodeLength = node_length
-        leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    return g
-
 def vegetative(
         DJ: int = 950,
         dict_params={},
@@ -438,3 +370,7 @@ def phenotype_fababean(g,
     sortie['PetioleDiam'] = dict(zip(leaves, [stem_d * coeff_petiole_d] * len(leaves)))
 
     update_MTG(g, sortie)
+
+# backward compatibility
+vegetative_fababean = vegetative
+vegetative_rapeseed = partial(vegetative, species='rapeseed')
