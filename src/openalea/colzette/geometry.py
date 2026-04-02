@@ -259,6 +259,41 @@ def vegetative_fababean(
 
     return g
 
+def vegetative(
+        DJ: int = 950,
+        dict_params={},
+        coord=[(0, 0, 0)],
+        species ='fababean'
+):
+    """ Build a field with nrows(coord) plants that have n_nodes internodes
+
+    """
+    phyllochrone = dict_params['phylloc']
+    n_nodes = int(round(DJ * phyllochrone))
+    if species == 'fababean':
+        total_height = total_height_fababean(DJ, dict_params)
+        node_length = total_height / n_nodes  # equal height distribution among internodes
+    else:
+        growth_node = dict_params['growth_node']
+        node_length = DJ * growth_node
+
+    g = MTG()
+    vid = g.add_component(g.root,
+                          label='Plant',
+                          edge_type='/',
+                          position=coord)  # vid = vertex_id
+
+    vid = g.add_child(vid, edge_type='<', label='Internode')
+    g.node(vid).NodeLength = node_length
+    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
+
+    for i in range(n_nodes - 1):
+        vid = g.add_child(vid, edge_type='<', label='Internode')
+        g.node(vid).NodeLength = node_length
+        leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
+
+    return g
+
 def total_height_fababean(DJ, dict_params_faba):
     L = dict_params_faba['L_height']
     k = dict_params_faba['k_height']
