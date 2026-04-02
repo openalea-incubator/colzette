@@ -59,7 +59,7 @@ def generate_population(sowing_pattern,
         xi = sowing_pattern['x'][id] * 100
         yi = sowing_pattern['y'][id] * 100
         gi = vegetative(DJ=PlantAge, dict_params=dict_params, coord=[(xi, yi, 0)], species=species)
-        phenotype(gi, total_surface=TLA, dict_params=dict_params)
+        phenotype(gi, TLA, dict_params)
 
         list_of_MTGs.append(gi.copy())
         list_of_positions.append((xi, yi, 0))

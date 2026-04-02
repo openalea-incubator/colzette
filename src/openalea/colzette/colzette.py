@@ -9,12 +9,6 @@ import openalea.plantgl.all as pgl
 from openalea.mtg import MTG, fat_mtg
 from openalea.plantgl.all import Vector3, Color3, Viewer
 
-from openalea.colzette.light import light_interception
-from openalea.colzette.scene import sowing_map, get_domain, create_scene
-from openalea.colzette.geometry import (RapeseedVisitor, FababeanVisitor, vegetative,
-                                        phenotype_fababean, phenotype_rapeseed)
-from openalea.colzette.population import generate_population
-
 def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
     if option_parameters == "Default":
         params_fn_rape = data_dir / 'parameters' / 'global_params_rapeseed.csv'
@@ -219,47 +213,3 @@ def setting_PGLViewer(width=1200, height=1200,
     return
 
 
-def run_static_simulation(das,
-                          PlantAge,
-                          RG_daily,
-                          TLA,
-                          option_plants,
-                          density,
-                          dict_params,
-                          type_simul="monocrop_aviso",
-                          species='Rapeseed'):
-
-    dict_params = dict_params[species]
-
-    if option_plants == "single":
-        sowing_pattern = pd.DataFrame({'x': [0.0], 'y': [0.0]})
-    else:
-        sowing_pattern = sowing_map(1.0, 1.0, density, type_simul)
-    nplants = len(sowing_pattern)
-
-    if species == 'Rapeseed':
-        visitor = RapeseedVisitor
-        phenotype = phenotype_rapeseed
-    else:
-        visitor = FababeanVisitor
-        phenotype = phenotype_fababean
-
-    if TLA == 0.0:
-        vec_Eabs = [0] * nplants
-        final_scene = None
-    else:
-        domain = get_domain(density, nplants)
-        list_of_MTGs, list_of_positions = generate_population(sowing_pattern, dict_params, TLA,
-                                                              PlantAge, phenotype, species= species)
-
-        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, visitor)
-
-        cs, vec_Eabs = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
-
-    vec_das = [das] * nplants
-    vec_TT = [PlantAge] * nplants
-    sub_dat = pd.DataFrame({'DAS': vec_das,
-                            'TT': vec_TT,
-                            'Plant': range(0, nplants),
-                            'Eabs': vec_Eabs})
-    return (final_scene, sub_dat)
