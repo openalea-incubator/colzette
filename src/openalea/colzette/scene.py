@@ -9,7 +9,7 @@ from openalea.plantgl import all as pgl
 
 from openalea.colzette.geometry import RapeseedVisitor, FababeanVisitor
 
-def create_scene(list_of_MTGs, list_of_positions, visitor = RapeseedVisitor):
+def create_scene_one_species(list_of_MTGs, list_of_positions, visitor = RapeseedVisitor):
     # function 2 to compute final scene and new indices
     # We initialize additional properties of scene_information:
     list_rotation = []
@@ -79,7 +79,7 @@ def create_scene(list_of_MTGs, list_of_positions, visitor = RapeseedVisitor):
                 unique_shape_id += 1
     return final_scene, shapes_indexer
 
-def create_mixture_scene(list_of_MTGs, list_of_positions, sowing_pattern):
+def create_scene(list_of_MTGs, list_of_positions, sowing_pattern):
     list_rotation = []
     shapes_indexer = {}
     unique_shape_id = 1
@@ -200,5 +200,6 @@ def sowing_map(
     return data2
 
  # backward compatibility
-create_rapeseed_scene=create_scene
-create_fababean_scene = partial(create_scene, visitor = FababeanVisitor)
+create_rapeseed_scene=create_scene_one_species
+create_fababean_scene = partial(create_scene_one_species, visitor = FababeanVisitor)
+create_mixture_scene = create_scene
