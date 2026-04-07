@@ -185,7 +185,7 @@ def sowing_map(
             for x in xs:
                 data.append((x, y, 'Rapeseed'))
 
-    elif type == "monocrop_fababean":
+    elif type == "monocrop_faba":
         for i, y in enumerate(ys):
             for x in xs:
                 data.append((x, y, 'Fababean'))
