@@ -1,7 +1,7 @@
 import pandas as pd
 
 from openalea.colzette.light import light_interception
-from openalea.colzette.scene import sowing_map, get_domain, create_scene_one_species, create_mixture_scene
+from openalea.colzette.scene import sowing_map, get_domain, create_scene
 from openalea.colzette.geometry import (RapeseedVisitor, FababeanVisitor,
                                         phenotype_fababean, phenotype_rapeseed)
 from openalea.colzette.population import generate_population
@@ -40,7 +40,7 @@ def run_static_simulation(das,
         list_of_MTGs, list_of_positions = generate_population(sowing_pattern, dict_params, TLA,
                                                               PlantAge, phenotype, species= species)
 
-        final_scene, shapes_indexer = create_mixture_scene(list_of_MTGs, list_of_positions, sowing_pattern)
+        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern)
 
         caribu_scene, vec_Eabs = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
 
