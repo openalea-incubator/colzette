@@ -18,7 +18,7 @@ def run_static_simulation(das,
     dict_params = dict_params[species]
 
     if option_plants == "single":
-        sowing_pattern = pd.DataFrame({'x': [0.0], 'y': [0.0]})
+        sowing_pattern = pd.DataFrame({'x': [0.0], 'y': [0.0], 'species': [species]})
     else:
         sowing_pattern = sowing_map(1.0, 1.0, density, type_simul)
     nplants = len(sowing_pattern)
