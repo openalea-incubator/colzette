@@ -161,7 +161,7 @@ def multi_leaflets(nb_leaflets=5.0,
     leafshape_fababean = pgl.Group(leaflets)
     return leafshape_fababean
 
-# Functions to generate leaf shapes (with leaflets for fababean)
+# Functions to generate leaf shapes (with leaflets for Fababean)
 def make_leafshape_rapeseed():
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
@@ -190,19 +190,19 @@ def make_leaflet_shape_fababean():
     leafletshape_fababean=pgl.BezierPatch(m, ustride=9, vstride=2)
     return(leafletshape_fababean)
 
-# Create MTGs for rapeseed and fababean
+# Create MTGs for rapeseed and Fababean
 def vegetative(
         DJ: int = 950,
         dict_params={},
         coord=[(0, 0, 0)],
-        species ='fababean'
+        species ='Fababean'
 ):
     """ Build a field with nrows(coord) plants that have n_nodes internodes
 
     """
     phyllochrone = dict_params['phylloc']
     n_nodes = int(round(DJ * phyllochrone))
-    if species == 'fababean':
+    if species == 'Fababean':
         total_height = total_height_fababean(DJ, dict_params)
         node_length = total_height / n_nodes  # equal height distribution among internodes
     else:

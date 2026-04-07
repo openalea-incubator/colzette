@@ -96,7 +96,7 @@ def create_mixture_scene(list_of_MTGs, list_of_positions, sowing_pattern):
         turtle.reset()
         turtle.move(list_of_positions[plant_index])
         turtle.rollR(angle_roll)
-        if sowing_pattern['species'][plant_index] == "fababean":
+        if sowing_pattern['species'][plant_index] == "Fababean":
             scene = turt.TurtleFrame(new_MTG,
                                         visitor=FababeanVisitor,
                                         turtle=turtle, gc=False)
@@ -171,7 +171,7 @@ def sowing_map(
     """
 
     species1 = "Rapeseed"
-    species2 = "fababean"
+    species2 = "Fababean"
 
     pas = np.sqrt(1 / density)
 
@@ -188,7 +188,7 @@ def sowing_map(
     elif type == "monocrop_faba":
         for i, y in enumerate(ys):
             for x in xs:
-                data.append((x, y, 'fababean'))
+                data.append((x, y, 'Fababean'))
 
     elif type == "intercrop_aviso_RRF" or type == "intercrop_vigo" or type == "intercrop_aviso_RF":
         for i, y in enumerate(ys):

@@ -66,7 +66,7 @@ def vegetative_mixture_plot(
     # initialize plot with 1st plant
     x0 = sowing_pattern['x'][0] * 100
     y0 = sowing_pattern['y'][0] * 100
-    if sowing_pattern['species'][0] == "fababean":
+    if sowing_pattern['species'][0] == "Fababean":
         g0 = vegetative_fababean(DJ=PlantAge_faba,
                                  dict_params_faba=dict_params_faba,
                                  coord=[(x0, y0, 0)]).above
@@ -100,7 +100,7 @@ def vegetative_mixture_plot(
         xi = sowing_pattern['x'][i] * 100
         yi = sowing_pattern['y'][i] * 100
 
-        if sowing_pattern['species'][i] == "fababean":
+        if sowing_pattern['species'][i] == "Fababean":
             gi = vegetative_fababean(DJ=PlantAge_faba,
                                      dict_params_faba=dict_params_faba,
                                      coord=[(xi, yi, 0)]).above

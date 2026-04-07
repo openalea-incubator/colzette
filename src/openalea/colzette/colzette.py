@@ -35,9 +35,9 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
         if Type_simul == "metamodel_rapeseed":
             vec_species=['Rapeseed']
         elif Type_simul == "metamodel_fababean":
-            vec_species = ['fababean']
+            vec_species = ['Fababean']
         else:
-            vec_species = ['Rapeseed','fababean']
+            vec_species = ['Rapeseed','Fababean']
         dict_params = {}
         for sp in vec_species:
             # here in mixture select columns for species parameters, df_par = ...
