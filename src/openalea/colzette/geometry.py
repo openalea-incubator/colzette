@@ -204,7 +204,10 @@ def vegetative(
     n_nodes = int(round(DJ * phyllochrone))
     if species == 'Fababean':
         total_height = total_height_fababean(DJ, dict_params)
-        node_length = total_height / n_nodes  # equal height distribution among internodes
+        if n_nodes > 0.0:
+            node_length = total_height / n_nodes  # equal height distribution among internodes
+        else:
+            node_length = 0.0
     else:
         growth_node = dict_params['growth_node']
         node_length = DJ * growth_node
