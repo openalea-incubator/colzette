@@ -75,7 +75,7 @@ def run_static_fababean(iday,
         sowing_pattern = sowing_map(1.0,
                                     1.0,
                                     density,
-                                    "monocrop_fababean")
+                                    "monocrop_faba")
     nplants = len(sowing_pattern)
 
     if vec_TLA_faba[iday] == 0.0:
