@@ -68,7 +68,7 @@ vec_TLA_faba = TLA_all['sim'].values[TLA_indices_keep_faba]
 option_parameters = Type_simul
 dict_params = df_to_dict(data_dir,option_parameters,Type_simul,"")
 #dict_params['Rapeseed']['phyllot']=137.5
-#dict_params['Fababean']['phyllot']=163.5
+#dict_params['fababean']['phyllot']=163.5
 density = 48.0
 iday = 84
 
@@ -83,7 +83,7 @@ def run_static_mixture(iday,
     PlantAge_faba = clim2.iloc[iday]['TT_faba']
     RG_daily = clim2.iloc[iday]['PAR']
     dict_params_rape = dict_params['Rapeseed']
-    dict_params_faba = dict_params['Fababean']
+    dict_params_faba = dict_params['fababean']
 
     sowing_pattern = sowing_map(1.0,
                             1.0,

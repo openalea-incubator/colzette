@@ -80,7 +80,7 @@ def generate_mixture_population(sowing_pattern,
         # print(id)
         xi = sowing_pattern['x'][id] * 100
         yi = sowing_pattern['y'][id] * 100
-        if sowing_pattern['species'][id] == "Fababean":
+        if sowing_pattern['species'][id] == "fababean":
             gi = vegetative_fababean(DJ=PlantAge_faba,
                                      dict_params_faba=dict_params_faba,
                                      coord=[(xi, yi, 0)])
