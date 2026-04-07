@@ -89,7 +89,7 @@ def run_static_rapeseed(iday, option_plants, clim2, density, dict_params, vec_TL
                                                         list_of_positions)
 
 
-        cs, vec_Eabs = light_interception(final_scene,
+        cs, vec_Eabs, raw, agg = light_interception(final_scene,
                                     shapes_indexer,
                                     list_of_MTGs,
                                     RG_daily,

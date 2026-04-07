@@ -108,7 +108,7 @@ def run_static_mixture(iday,
         final_scene, shapes_indexer = create_mixture_scene(list_of_MTGs,
                                                         list_of_positions,
                                                         sowing_pattern)
-        cs, vec_Eabs = light_interception(final_scene,
+        cs, vec_Eabs, raw, agg = light_interception(final_scene,
                                         shapes_indexer,
                                         list_of_MTGs,
                                         RG_daily,

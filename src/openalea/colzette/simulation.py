@@ -33,6 +33,8 @@ def run_static_simulation(das,
         vec_Eabs = [0] * nplants
         final_scene = None
         caribu_scene = None
+        raw = None
+        agg = None
     else:
         domain = get_domain(density, nplants)
         list_of_MTGs, list_of_positions = generate_population(sowing_pattern, dict_params, TLA,
@@ -40,7 +42,7 @@ def run_static_simulation(das,
 
         final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern)
 
-        caribu_scene, vec_Eabs = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
+        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
 
     vec_das = [das] * nplants
     vec_TT = [PlantAge] * nplants
@@ -48,7 +50,7 @@ def run_static_simulation(das,
                             'TT': vec_TT,
                             'Plant': range(0, nplants),
                             'Eabs': vec_Eabs})
-    return (final_scene, caribu_scene, sub_dat)
+    return (final_scene, caribu_scene, sub_dat, raw, agg)
 
 
 def run_static_mixture_simulation(das,
@@ -73,6 +75,8 @@ def run_static_mixture_simulation(das,
         vec_Eabs = [0] * nplants
         final_scene = None
         caribu_scene = None
+        raw = None
+        agg = None
     else:
         domain = get_domain(density, nplants)
 
@@ -86,7 +90,7 @@ def run_static_mixture_simulation(das,
         final_scene, shapes_indexer = create_scene(list_of_MTGs,
                                                     list_of_positions,
                                                     sowing_pattern)
-        caribu_scene, vec_Eabs = light_interception(final_scene,
+        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene,
                                           shapes_indexer,
                                           list_of_MTGs,
                                           RG_daily,
@@ -99,4 +103,4 @@ def run_static_mixture_simulation(das,
                             'TT_faba': vec_TT_faba,
                             'Plant': range(0, nplants),
                             'Eabs': vec_Eabs})
-    return (final_scene, caribu_scene, sub_dat)
+    return (final_scene, caribu_scene, sub_dat, raw, agg)

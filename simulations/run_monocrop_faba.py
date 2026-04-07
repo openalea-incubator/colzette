@@ -94,7 +94,7 @@ def run_static_fababean(iday,
                                                         list_of_positions)
 
 
-        cs, vec_Eabs = light_interception(final_scene,
+        cs, vec_Eabs, raw, agg = light_interception(final_scene,
                                     shapes_indexer,
                                     list_of_MTGs,
                                     RG_daily,
