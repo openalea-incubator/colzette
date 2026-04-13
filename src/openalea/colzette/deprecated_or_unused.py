@@ -19,7 +19,7 @@ def vegetative_fababean_plot(
     x0 = sowing_pattern['x'][0] * 100
     y0 = sowing_pattern['y'][0] * 100
     g0 = vegetative_fababean(DJ=PlantAge_faba,
-                             dict_params_faba=dict_params_faba,
+                             dict_params=dict_params_faba,
                              coord=[(x0, y0, 0)]).above
     phenotype_fababean(g0,
                        total_surface=vec_TLA_faba[iday],
@@ -37,7 +37,7 @@ def vegetative_fababean_plot(
         xi = sowing_pattern['x'][i] * 100
         yi = sowing_pattern['y'][i] * 100
         gi = vegetative_fababean(DJ=PlantAge_faba,
-                                 dict_params_faba=dict_params_faba,
+                                 dict_params=dict_params_faba,
                                  coord=[(xi, yi, 0)]).above
         phenotype_fababean(gi,
                            total_surface=vec_TLA_faba[iday],
@@ -68,7 +68,7 @@ def vegetative_mixture_plot(
     y0 = sowing_pattern['y'][0] * 100
     if sowing_pattern['species'][0] == "Fababean":
         g0 = vegetative_fababean(DJ=PlantAge_faba,
-                                 dict_params_faba=dict_params_faba,
+                                 dict_params=dict_params_faba,
                                  coord=[(x0, y0, 0)]).above
         phenotype_fababean(g0,
                            total_surface=vec_TLA_faba[iday],
@@ -82,7 +82,7 @@ def vegetative_mixture_plot(
         list_g.append(g0)
     else:
         g0 = vegetative_rapeseed(DJ=PlantAge_rape,
-                                 dict_params_rape=dict_params_rape,
+                                 dict_params=dict_params_rape,
                                  coord=[(x0, y0, 0)]).above
         phenotype_rapeseed(g0,
                            total_surface=vec_TLA_rape[iday],
@@ -102,7 +102,7 @@ def vegetative_mixture_plot(
 
         if sowing_pattern['species'][i] == "Fababean":
             gi = vegetative_fababean(DJ=PlantAge_faba,
-                                     dict_params_faba=dict_params_faba,
+                                     dict_params=dict_params_faba,
                                      coord=[(xi, yi, 0)]).above
             phenotype_fababean(gi,
                                total_surface=vec_TLA_faba[iday],
@@ -118,7 +118,7 @@ def vegetative_mixture_plot(
 
         else:
             gi = vegetative_rapeseed(DJ=PlantAge_rape,
-                                     dict_params_rape=dict_params_rape,
+                                     dict_params=dict_params_rape,
                                      coord=[(xi, yi, 0)]).above
             phenotype_rapeseed(gi,
                                total_surface=vec_TLA_rape[iday],
@@ -144,7 +144,7 @@ def vegetative_rapeseed_plot(
     x0 = sowing_pattern['x'][0] * 100
     y0 = sowing_pattern['y'][0] * 100
     g0 = vegetative_rapeseed(DJ=PlantAge_rape,
-                             dict_params_rape=dict_params_rape,
+                             dict_params=dict_params_rape,
                              coord=[(x0, y0, 0)]).above
     phenotype_rapeseed(g0,
                        total_surface=vec_TLA_rape[iday],
@@ -162,7 +162,7 @@ def vegetative_rapeseed_plot(
         xi = sowing_pattern['x'][i] * 100
         yi = sowing_pattern['y'][i] * 100
         gi = vegetative_rapeseed(DJ=PlantAge_rape,
-                                 dict_params_rape=dict_params_rape,
+                                 dict_params=dict_params_rape,
                                  coord=[(xi, yi, 0)]).above
         phenotype_rapeseed(gi,
                            total_surface=vec_TLA_rape[iday],

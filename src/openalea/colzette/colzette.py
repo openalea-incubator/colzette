@@ -5,10 +5,9 @@ Colzette library
 import numpy as np
 import pandas as pd
 
-from openalea.mtg import MTG, fat_mtg
-
-from openalea.plantgl.all import Vector3, Color3, Viewer
 import openalea.plantgl.all as pgl
+from openalea.mtg import MTG, fat_mtg
+from openalea.plantgl.all import Vector3, Color3, Viewer
 
 def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
     if option_parameters == "Default":
@@ -212,3 +211,5 @@ def setting_PGLViewer(width=1200, height=1200,
     pgl.Viewer.grids.set(grid, grid, grid, grid)
 
     return
+
+

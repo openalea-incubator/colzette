@@ -5,9 +5,10 @@ from pathlib import Path # deal with paths in python 3
 import pandas
 
 from openalea.colzette.colzette import compute_thermal_time, df_to_dict
-from openalea.colzette.population import generate_fababean_population
+from openalea.colzette.population import generate_population
+from openalea.colzette.geometry import phenotype_fababean, FababeanVisitor
 from openalea.colzette.light import light_interception
-from openalea.colzette.scene import create_fababean_scene, sowing_map, get_domain
+from openalea.colzette.scene import create_scene_one_species, sowing_map, get_domain
 
 root_project_dir = Path('.').absolute().parent
 
@@ -75,7 +76,7 @@ def run_static_fababean(iday,
         sowing_pattern = sowing_map(1.0,
                                     1.0,
                                     density,
-                                    "monocrop_fababean")
+                                    "monocrop_faba")
     nplants = len(sowing_pattern)
 
     if vec_TLA_faba[iday] == 0.0:
@@ -83,18 +84,20 @@ def run_static_fababean(iday,
         final_scene = None
     else:
         domain = get_domain(density, nplants)
-        list_of_MTGs, list_of_positions = generate_fababean_population(sowing_pattern,
+
+        list_of_MTGs, list_of_positions = generate_population(sowing_pattern,
                                                                 dict_params_faba,
-                                                                vec_TLA_faba,
+                                                                vec_TLA_faba[iday],
                                                                 PlantAge_faba,
-                                                                iday)
+                                                              phenotype_fababean,
+                                                              species='Fababean')
 
 
-        final_scene, shapes_indexer = create_fababean_scene(list_of_MTGs,
-                                                        list_of_positions)
+        final_scene, shapes_indexer = create_scene_one_species(list_of_MTGs,
+                                                        list_of_positions, FababeanVisitor)
 
 
-        cs, vec_Eabs = light_interception(final_scene,
+        cs, vec_Eabs, raw, agg = light_interception(final_scene,
                                     shapes_indexer,
                                     list_of_MTGs,
                                     RG_daily,

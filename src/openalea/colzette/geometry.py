@@ -5,9 +5,9 @@ colzette module related turtle and visitor to build plant geometry
 import numpy as np
 
 from math import pi, radians
+from functools import partial
 
 import openalea.plantgl.all as pgl
-
 from openalea.mtg import MTG
 
 from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets
@@ -161,7 +161,7 @@ def multi_leaflets(nb_leaflets=5.0,
     leafshape_fababean = pgl.Group(leaflets)
     return leafshape_fababean
 
-# Functions to generate leaf shapes (with leaflets for fababean)
+# Functions to generate leaf shapes (with leaflets for Fababean)
 def make_leafshape_rapeseed():
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
@@ -190,57 +190,27 @@ def make_leaflet_shape_fababean():
     leafletshape_fababean=pgl.BezierPatch(m, ustride=9, vstride=2)
     return(leafletshape_fababean)
 
-# Create MTGs for rapeseed and fababean
-def vegetative_rapeseed(
+# Create MTGs for rapeseed and Fababean
+def vegetative(
         DJ: int = 950,
-        dict_params_rape={},
-        coord=(0, 0, 0)
-
+        dict_params={},
+        coord=[(0, 0, 0)],
+        species ='Fababean'
 ):
     """ Build a field with nrows(coord) plants that have n_nodes internodes
 
     """
-    growth_node = dict_params_rape['growth_node']
-    phyllochrone = dict_params_rape['phylloc']
+    phyllochrone = dict_params['phylloc']
     n_nodes = int(round(DJ * phyllochrone))
-    node_length = DJ * growth_node
-    g = MTG()
-
-    vid = g.add_component(g.root, label='Plant', edge_type='/', position=coord)  # vid = vertex_id
-    # vid = g.add_component(vid, label='Axis')
-
-    # pid = g.add_component(vid, label='Phytomer') #pid= phytomer_id
-    vid = g.add_child(vid, edge_type='<', label='Internode')
-    g.node(vid).NodeLength = node_length
-    # g.node(vid).short = True
-    leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    for i in range(n_nodes - 1):
-        vid = g.add_child(vid, edge_type='<', label='Internode')
-        g.node(vid).NodeLength = node_length
-        # pid = g.add_child(pid, edge_type='<', label='Phytomer')
-        # vid, pid = g.add_child_and_complex(vid, complex=pid, edge_type='<', label='Internode')
-        # g.node(vid).NodeLength = node_length
-        # g.node(vid).short = True
-
-        leaf_id = g.add_child(vid, edge_type='+', label='Leaf')
-
-    return g
-
-def vegetative_fababean(
-        DJ: int = 950,
-        # node_length: float= 0.02,
-        dict_params_faba={},
-        coord=[(0, 0, 0)]
-
-):
-    """ Build a field with nrows(coord) plants that have n_nodes internodes
-
-    """
-    phyllochrone = dict_params_faba['phylloc']
-    n_nodes = int(round(DJ * phyllochrone))
-    total_height = total_height_fababean(DJ, dict_params_faba)
-    node_length = total_height / n_nodes  # equal height distribution among internodes
+    if species == 'Fababean':
+        total_height = total_height_fababean(DJ, dict_params)
+        if n_nodes > 0.0:
+            node_length = total_height / n_nodes  # equal height distribution among internodes
+        else:
+            node_length = 0.0
+    elif species == 'Rapeseed':
+        growth_node = dict_params['growth_node']
+        node_length = DJ * growth_node
 
     g = MTG()
     vid = g.add_component(g.root,
@@ -295,38 +265,38 @@ def phenotype_rapeseed(g,
     stem_d = 0.1
     coeff_petiole_d = 0.5
 
-    sortie = dict()
+    output = dict()
     plants = [k for k, v in g.properties()['label'].items() if v == 'Plant']
     leaves = [k for k, v in g.properties()['label'].items() if v == 'Leaf']
     internodes = [k for k, v in g.properties()['label'].items() if v == 'Internode']
 
-    sortie['coeff_width'] = dict(zip(plants, [coeff_width] * len(plants)))
-    sortie['coeff_petiole_d'] = dict(zip(plants, [coeff_petiole_d] * len(plants)))
-    sortie['stem_d'] = dict(zip(plants, [stem_d] * len(plants)))
+    output['coeff_width'] = dict(zip(plants, [coeff_width] * len(plants)))
+    output['coeff_petiole_d'] = dict(zip(plants, [coeff_petiole_d] * len(plants)))
+    output['stem_d'] = dict(zip(plants, [stem_d] * len(plants)))
     surface = bell_shaped_dist(total_area=1, nb_phy=int(len(leaves) / len(plants)), rmax=leaf_max, skewness=skew)
-    sortie['SurfaceRepartition'] = dict(zip(leaves, surface * len(leaves)))
-    sortie['LeafSurface'] = dict(zip(leaves, [element * total_surface for element in surface] * len(leaves)))
+    output['SurfaceRepartition'] = dict(zip(leaves, surface * len(leaves)))
+    output['LeafSurface'] = dict(zip(leaves, [element * total_surface for element in surface] * len(leaves)))
 
-    sortie['LeafLength'] = dict(zip(leaves,
+    output['LeafLength'] = dict(zip(leaves,
                                     [2 * (element / (coeff_width * pi)) ** (0.5) for element in
-                                     sortie['LeafSurface'].values()] * len(leaves)))
+                                     output['LeafSurface'].values()] * len(leaves)))
 
-    sortie['LeafWidth'] = dict(zip(leaves,
-                                   [element * coeff_width for element in sortie['LeafLength'].values()] * len(leaves)))
-    sortie['SurfTheo'] = dict(zip(leaves, [pi * (element / 2) * (coeff_width * element / 2) for element in
-                                           sortie['LeafLength'].values()] * len(leaves)))
-    sortie['PetioleLength'] = dict(
-        zip(leaves, [element * coeff_petiole for element in sortie['LeafLength'].values()] * len(leaves)))
+    output['LeafWidth'] = dict(zip(leaves,
+                                   [element * coeff_width for element in output['LeafLength'].values()] * len(leaves)))
+    output['SurfTheo'] = dict(zip(leaves, [pi * (element / 2) * (coeff_width * element / 2) for element in
+                                           output['LeafLength'].values()] * len(leaves)))
+    output['PetioleLength'] = dict(
+        zip(leaves, [element * coeff_petiole for element in output['LeafLength'].values()] * len(leaves)))
 
-    sortie['InsertionAngle'] = dict(zip(leaves, [ins_angle] * len(leaves)))
-    sortie['LeafAngle'] = dict(zip(leaves, [leaf_angle] * len(leaves)))
-    sortie['Phyllotaxy'] = dict(zip(internodes, [phyllot] * len(internodes)))
-    sortie['Phyllotaxy'].update(dict(zip(leaves, [phyllot] * len(leaves))))
+    output['InsertionAngle'] = dict(zip(leaves, [ins_angle] * len(leaves)))
+    output['LeafAngle'] = dict(zip(leaves, [leaf_angle] * len(leaves)))
+    output['Phyllotaxy'] = dict(zip(internodes, [phyllot] * len(internodes)))
+    output['Phyllotaxy'].update(dict(zip(leaves, [phyllot] * len(leaves))))
 
-    sortie['StemDiam'] = dict(zip(internodes, [stem_d] * len(internodes)))
-    sortie['PetioleDiam'] = dict(zip(leaves, [stem_d * coeff_petiole_d] * len(leaves)))
+    output['StemDiam'] = dict(zip(internodes, [stem_d] * len(internodes)))
+    output['PetioleDiam'] = dict(zip(leaves, [stem_d * coeff_petiole_d] * len(leaves)))
 
-    update_MTG(g, sortie)
+    update_MTG(g, output)
 
 
 def phenotype_fababean(g,
@@ -359,47 +329,51 @@ def phenotype_fababean(g,
     stem_d = 0.1
     coeff_petiole_d = 0.8
 
-    sortie = dict()
+    output = dict()
     plants = [k for k, v in g.properties()['label'].items() if v == 'Plant']
     leaves = [k for k, v in g.properties()['label'].items() if v == 'Leaf']
     internodes = [k for k, v in g.properties()['label'].items() if v == 'Internode']
     ranks = [i for i in range(1, len(leaves) + 1)]
     nb_leaflets = [get_nb_leaflets(ri) for ri in ranks]
 
-    sortie['Nb_leaflets'] = dict(zip(leaves, nb_leaflets))
+    output['Nb_leaflets'] = dict(zip(leaves, nb_leaflets))
     vec_coeff_width = [coeff_width1] * 2 + [coeff_width2] * (len(leaves) - 2)
-    sortie['coeff_width'] = dict(zip(leaves, vec_coeff_width))
-    # sortie['coeff_width'] = dict(zip(plants,[coeff_width]*len(plants)))
-    sortie['coeff_petiole_d'] = dict(zip(leaves, [coeff_petiole_d] * len(leaves)))
-    sortie['stem_d'] = dict(zip(leaves, [stem_d] * len(leaves)))
+    output['coeff_width'] = dict(zip(leaves, vec_coeff_width))
+    # output['coeff_width'] = dict(zip(plants,[coeff_width]*len(plants)))
+    output['coeff_petiole_d'] = dict(zip(leaves, [coeff_petiole_d] * len(leaves)))
+    output['stem_d'] = dict(zip(leaves, [stem_d] * len(leaves)))
     surface = bell_shaped_dist(total_area=1, nb_phy=int(len(leaves) / len(plants)), rmax=leaf_max, skewness=skew)
-    sortie['SurfaceRepartition'] = dict(zip(surface, leaves))
-    sortie['LeafSurface'] = dict(zip(leaves, [element * total_surface for element in surface]))
+    output['SurfaceRepartition'] = dict(zip(surface, leaves))
+    output['LeafSurface'] = dict(zip(leaves, [element * total_surface for element in surface]))
     vec_leaflet_surface = [surface[i] * total_surface / nb_leaflets[i] for i in range(0, len(surface))]
-    sortie['LeafletSurface'] = dict(zip(leaves, vec_leaflet_surface))
-    # sortie['LeafLength']= dict(zip(leaves,vec_leaflet_length))
+    output['LeafletSurface'] = dict(zip(leaves, vec_leaflet_surface))
+    # output['LeafLength']= dict(zip(leaves,vec_leaflet_length))
     vec_leaflet_length = [2 * (vec_leaflet_surface[i] / (vec_coeff_width[i] * pi)) ** (0.5) for i in
                           range(0, len(vec_leaflet_surface))]
-    # leaflet_length = [2*(element/(coeff_width*pi))**(0.5) for element in sortie['LeafletSurface'].values()]
-    sortie['LeafletLength'] = dict(zip(leaves, vec_leaflet_length))
+    # leaflet_length = [2*(element/(coeff_width*pi))**(0.5) for element in output['LeafletSurface'].values()]
+    output['LeafletLength'] = dict(zip(leaves, vec_leaflet_length))
 
-    # sortie['LeafWidth']=dict(zip(leaves,
-    #                 [element *coeff_width for element in sortie['LeafLength'].values()]*len(leaves)))
+    # output['LeafWidth']=dict(zip(leaves,
+    #                 [element *coeff_width for element in output['LeafLength'].values()]*len(leaves)))
     vec_leaflet_width = [vec_leaflet_length[i] * vec_coeff_width[i] for i in range(0, len(vec_leaflet_length))]
-    sortie['LeafletWidth'] = dict(zip(leaves, vec_leaflet_width))
+    output['LeafletWidth'] = dict(zip(leaves, vec_leaflet_width))
     vec_surftheo = [pi * (vec_leaflet_length[i] / 2) * (vec_coeff_width[i] * vec_leaflet_length[i] / 2) * nb_leaflets[i]
                     for i in range(0, len(vec_leaflet_length))]
-    sortie['SurfTheo'] = dict(zip(leaves, vec_surftheo))
-    sortie['PetioleLength1'] = dict(
-        zip(leaves, [element * coeff_petiole_leaflet1 for element in sortie['LeafletLength'].values()]))
-    sortie['PetioleLength2'] = dict(
-        zip(leaves, [element * coeff_petiole_leaflet2 for element in sortie['LeafletLength'].values()]))
-    sortie['InsertionAngle'] = dict(zip(leaves, [ins_angle] * len(leaves)))
-    sortie['LeafAngle'] = dict(zip(leaves, [leaf_angle] * len(leaves)))
-    sortie['Phyllotaxy'] = dict(zip(internodes, [phyllot] * len(internodes)))
-    sortie['Phyllotaxy'].update(dict(zip(leaves, [0] * len(leaves))))
+    output['SurfTheo'] = dict(zip(leaves, vec_surftheo))
+    output['PetioleLength1'] = dict(
+        zip(leaves, [element * coeff_petiole_leaflet1 for element in output['LeafletLength'].values()]))
+    output['PetioleLength2'] = dict(
+        zip(leaves, [element * coeff_petiole_leaflet2 for element in output['LeafletLength'].values()]))
+    output['InsertionAngle'] = dict(zip(leaves, [ins_angle] * len(leaves)))
+    output['LeafAngle'] = dict(zip(leaves, [leaf_angle] * len(leaves)))
+    output['Phyllotaxy'] = dict(zip(internodes, [phyllot] * len(internodes)))
+    output['Phyllotaxy'].update(dict(zip(leaves, [0] * len(leaves))))
 
-    sortie['StemDiam'] = dict(zip(internodes, [stem_d] * len(internodes)))
-    sortie['PetioleDiam'] = dict(zip(leaves, [stem_d * coeff_petiole_d] * len(leaves)))
+    output['StemDiam'] = dict(zip(internodes, [stem_d] * len(internodes)))
+    output['PetioleDiam'] = dict(zip(leaves, [stem_d * coeff_petiole_d] * len(leaves)))
 
-    update_MTG(g, sortie)
+    update_MTG(g, output)
+
+# backward compatibility
+vegetative_fababean = vegetative
+vegetative_rapeseed = partial(vegetative, species='Rapeseed')

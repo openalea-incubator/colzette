@@ -25,4 +25,4 @@ def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, doma
 
         intercepted_light = sum([Eabs_leaves[k] * area_leaves[k] for k in Eabs_leaves])  # in J/cm2
         vec_Eabs.append(intercepted_light)
-    return cs, vec_Eabs
+    return cs, vec_Eabs, raw, agg
