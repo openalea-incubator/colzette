@@ -5,9 +5,10 @@ from pathlib import Path # deal with paths in python 3
 import pandas
 
 from openalea.colzette.colzette import compute_thermal_time, df_to_dict
-from openalea.colzette.population import generate_rapeseed_population
+from openalea.colzette.population import generate_population
+from openalea.colzette.geometry import phenotype_rapeseed, RapeseedVisitor
 from openalea.colzette.light import light_interception
-from openalea.colzette.scene import create_rapeseed_scene, sowing_map, get_domain
+from openalea.colzette.scene import create_scene_one_species, sowing_map, get_domain
 
 root_project_dir = Path('.').absolute().parent
 
@@ -78,15 +79,16 @@ def run_static_rapeseed(iday, option_plants, clim2, density, dict_params, vec_TL
         final_scene = None
     else:
         domain = get_domain(density, nplants)
-        list_of_MTGs, list_of_positions = generate_rapeseed_population(sowing_pattern,
+        list_of_MTGs, list_of_positions = generate_population(sowing_pattern,
                                                                 dict_params_rape,
-                                                                vec_TLA_rape,
+                                                                vec_TLA_rape[iday],
                                                                 PlantAge_rape,
-                                                                iday)
+                                                                phenotype_rapeseed,
+                                                              species='Rapeseed')
 
 
-        final_scene, shapes_indexer = create_rapeseed_scene(list_of_MTGs,
-                                                        list_of_positions)
+        final_scene, shapes_indexer = create_scene_one_species(list_of_MTGs,
+                                                        list_of_positions, RapeseedVisitor)
 
 
         cs, vec_Eabs, raw, agg = light_interception(final_scene,

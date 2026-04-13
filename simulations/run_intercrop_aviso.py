@@ -5,9 +5,9 @@ from pathlib import Path # deal with paths in python 3
 import pandas
 
 from openalea.colzette.colzette import compute_thermal_time, df_to_dict
-from openalea.colzette.population import generate_mixture_population_old
+from openalea.colzette.population import generate_mixture_population
 from openalea.colzette.light import light_interception
-from openalea.colzette.scene import create_mixture_scene, sowing_map, get_domain
+from openalea.colzette.scene import create_scene, sowing_map, get_domain
 
 root_project_dir = Path('.').absolute().parent
 
@@ -97,15 +97,14 @@ def run_static_mixture(iday,
     else:
         domain = get_domain(density, nplants)
 
-        list_of_MTGs, list_of_positions = generate_mixture_population_old(sowing_pattern,
+        list_of_MTGs, list_of_positions = generate_mixture_population(sowing_pattern,
                                                                     dict_params_rape,
                                                                     dict_params_faba,
-                                                                    vec_TLA_rape,
-                                                                    vec_TLA_faba,
+                                                                    vec_TLA_rape[iday],
+                                                                    vec_TLA_faba[iday],
                                                                     PlantAge_rape,
-                                                                    PlantAge_faba,
-                                                                    iday)
-        final_scene, shapes_indexer = create_mixture_scene(list_of_MTGs,
+                                                                    PlantAge_faba)
+        final_scene, shapes_indexer = create_scene(list_of_MTGs,
                                                         list_of_positions,
                                                         sowing_pattern)
         cs, vec_Eabs, raw, agg = light_interception(final_scene,

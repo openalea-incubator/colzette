@@ -113,7 +113,7 @@ def run_static_fababean(iday,
 
 def run_dynamic_fababean(option_plants, clim2, density, dict_params,vec_TLA_faba):
     dfs = []
-    for iday in range(0,11): #range(0,len(clim2)):
+    for iday in range(0,len(clim2)):
         print(iday)
         scene, sub_dat = run_static_fababean(iday,
                                       option_plants,
@@ -122,7 +122,7 @@ def run_dynamic_fababean(option_plants, clim2, density, dict_params,vec_TLA_faba
                                       dict_params,
                                       vec_TLA_faba)
         dfs.append(sub_dat)
-        if iday == 10:
+        if iday == 84:
             scene2 = scene
     df = pandas.concat(dfs,ignore_index=True)
     return(df, scene2)
