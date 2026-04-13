@@ -376,4 +376,4 @@ def phenotype_fababean(g,
 
 # backward compatibility
 vegetative_fababean = vegetative
-vegetative_rapeseed = partial(vegetative, species='rapeseed')
+vegetative_rapeseed = partial(vegetative, species='Rapeseed')
