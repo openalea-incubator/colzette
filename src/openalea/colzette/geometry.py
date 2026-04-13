@@ -208,7 +208,7 @@ def vegetative(
             node_length = total_height / n_nodes  # equal height distribution among internodes
         else:
             node_length = 0.0
-    else:
+    elif species == 'Rapeseed':
         growth_node = dict_params['growth_node']
         node_length = DJ * growth_node
 
