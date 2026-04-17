@@ -85,9 +85,6 @@ docs/preconvert
 site/
 out
 
-# Sphinx
-_static
-
 # this repo
 results/
 archive/results/
