@@ -12,6 +12,11 @@ _________________
 
 **colzette** A Parametric Model for oilseed rape and legume.
 
+<figure>
+    <img src="doc/_static/intercrop_example.png" alt="Alt text" />
+    <figcaption>Heat map representation of the surfacic density of energy absorbed by an intercrop of Fababean and Rapessed plants.</figcaption>
+</figure>
+
 ### Status
 
 Python package
