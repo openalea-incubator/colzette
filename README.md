@@ -22,19 +22,54 @@ CecILL-C
 
 ### Installation
 
-First, **Conda** needs to be installed. It is a package manager that can be installed on Linux, Windows, and Mac. we recommand to install [miniforge](https://github.com/conda-forge/miniforge).
+Conda must be installed, please follow the instructions and recommendations [here](https://openalea.readthedocs.io/en/latest/install.html).
 
 #### for user
 Creating a new conda environment with colzette and its dependencies installed
 ```bash
 mamba create -n colzette -c openalea3/label/dev -c openalea3 -c conda-forge openalea.colzette
+# activate the environment
+mamba activate colzette
+```
+
+activate the environment
+```bash
+mamba activate colzette
 ```
 
 #### for developer
 ```bash
 mamba env create -f ./conda/environment.yml
 ```
+
+activate the environment
+```bash
+mamba activate colzette_dev
+```
+
 This will create a conda environment with dependencies installed and install colzette in editable state.
+
+### Basic usage
+
+In the proper conda environment, you can either use ipython:
+```bash
+iptyhon
+```
+```python
+In [1]: import openalea.colzette
+```
+
+or you can run the jupyter notebook in `doc/examples`.
+First install `jupyterlab` and `òpenalea.widgets`
+```bash
+mamba install -c openalea3 -c conda-forge jupyterlab openalea.widgets
+```
+
+then in `doc/examples` launch jupyter-lab
+````bash
+cd doc/examples
+jupyter-lab
+````
 
 ### Contributors
 
