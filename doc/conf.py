@@ -39,7 +39,8 @@ extensions = [
 
 
 nbsphinx_thumbnails = {
-    'examples/Segmentation': '_static/segmentation_thumb.png',
+    'examples/monocrop_calculation': '_static/monocrop_example.png',
+    'examples/intercrop_calculation': '_static/intercrop_example.png',
 }
 
 nbsphinx_allow_errors = True
