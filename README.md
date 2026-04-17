@@ -6,6 +6,7 @@ _________________
 [![Build Status](https://github.com/openalea-incubator/colzette/actions/workflows/conda-package-build.yml/badge.svg?branch=main)](https://github.com/openalea-incubator/colzette/actions/workflows/conda-package-build.yml?query=branch%3Amaster)
 [![License](https://img.shields.io/badge/License--CeCILL-C-blue)](https://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html)
 [![Anaconda-Server Badge](https://anaconda.org/openalea3/colzette/badges/version.svg)](https://anaconda.org/openalea3/colzette)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/openalea-incubator/colzette.git/HEAD?urlpath=%2Fdoc%2Ftree%2Fdoc%2Fexamples%2Findex.ipynb)
 _________________
 
 **colzette** A Parametric Model for oilseed rape and legume.
