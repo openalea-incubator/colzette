@@ -3,9 +3,10 @@
 _________________
 
 [![Docs](https://readthedocs.org/projects/colzette/badge/?version=latest)](https://colzette.readthedocs.io/)
-[![Build Status](https://github.com/openalea-incubator/colzette/actions/workflows/conda-package-build.yml/badge.svg?branch=main)](https://github.com/openalea-incubator/colzette/actions/workflows/conda-package-build.yml?query=branch%3Amaster)
+[![Build Status](https://github.com/openalea/colzette/actions/workflows/openalea_ci.yml/badge.svg)](https://github.com/openalea/colzette/actions/workflows/openalea_ci.yml)
+[![Python Version](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)](https://www.python.org/downloads/)
+[![Anaconda-Server Badge](https://anaconda.org/openalea3/openalea.colzette/badges/version.svg)](https://anaconda.org/openalea3/openalea.colzette)
 [![License](https://img.shields.io/badge/License--CeCILL-C-blue)](https://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html)
-[![Anaconda-Server Badge](https://anaconda.org/openalea3/colzette/badges/version.svg)](https://anaconda.org/openalea3/colzette)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/openalea-incubator/colzette.git/HEAD?urlpath=%2Fdoc%2Ftree%2Fdoc%2Fexamples%2Findex.ipynb)
 _________________
 
