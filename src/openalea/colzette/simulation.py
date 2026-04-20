@@ -87,7 +87,7 @@ def run_static_mixture_simulation(das,
                                                                           PlantAge_rape,
                                                                           PlantAge_faba)
 
-        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern)
+        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=10, vstride=10)
 
         caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
 
