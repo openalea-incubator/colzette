@@ -33,8 +33,6 @@ Conda must be installed, please follow the instructions and recommendations [her
 Creating a new conda environment with colzette and its dependencies installed
 ```bash
 mamba create -n colzette -c openalea3/label/dev -c openalea3 -c conda-forge openalea.colzette
-# activate the environment
-mamba activate colzette
 ```
 
 activate the environment

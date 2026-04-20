@@ -1,18 +1,18 @@
-# colzette
+# Welcome to Colzette's documentation
 
-## Official documentation for openalea.colzette
+<figure>
+    <img src="_static/monocrop_example.png" alt="Alt text" />
+    <figcaption>Heat map representation of the surfacic density of energy absorbed by an monocrop of Rapessed plants.</figcaption>
+</figure>
+
+OpenAlea.Colzette is a Parametric Model for oilseed rape and legume.
 
 ```{toctree}
-:maxdepth: 2
-:hidden:
+:maxdepth: 1
+:caption: Contents:
 
-Home <self>
 Install <installation>
-Getting started <getting_started>
-Usage <usage>
+notebook_examples.rst
 API Reference <api>
 More <extra>
-```
-
-```{include} ../README.md
 ```
