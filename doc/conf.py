@@ -33,6 +33,7 @@ extensions = [
     "sphinx.ext.todo",  # support for todo items
     "sphinx.ext.napoleon",  # support for numpy and google style docstrings
     "sphinx_favicon",  # support for favicon
+    "sphinx_copybutton",      # support for copybutton in code blocks
     "nbsphinx",  # for integrating jupyter notebooks
     "myst_parser",  # for parsing .md files
 ]
@@ -83,6 +84,7 @@ html_theme = "pydata_sphinx_theme"
 # further.  For a list of options available for each theme, see the
 # documentation.
 html_theme_options = {
+    "logo_name": False,
     "header_links_before_dropdown": 6,
     "sidebarwidth": 200,
     "collapse_navigation": "false",
@@ -104,6 +106,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
+# html_title = " "
 html_static_path = ["_static"]
 html_logo = "_static/openalea_web.svg"
 html_favicon = "_static/openalea_web.svg"

@@ -1,6 +1,7 @@
 # Installation
 
-You must use conda environment : <https://docs.conda.io/en/latest/index.html>
+
+Conda must be installed, please follow the instructions and recommendations [here](https://openalea.readthedocs.io/en/latest/install.html).
 
 ## Users
 
@@ -32,14 +33,24 @@ cd colzette/test; pytest
 
 ```bash
 # Install dependency with conda
-mamba env create -n phm -f conda/environment.yml
-mamba activate colzette
-
-# Clone colzette and install
-git clone https://github.com/openalea/colzette.git
-cd colzette
-pip install .
+mamba env create -f conda/environment.yml
+mamba activate colzette_dev
 
 # (Optional) Test your installation
 cd test; pytest
 ```
+This will create a conda environment with dependencies installed and install colzette in editable state.
+
+## Running notebook Examples
+
+you can run the jupyter notebook in `doc/examples`.
+First install `jupyterlab` and `òpenalea.widgets`
+```bash
+mamba install -c openalea3 -c conda-forge jupyterlab openalea.widgets
+```
+
+then in `doc/examples` launch jupyter-lab
+````bash
+cd doc/examples
+jupyter-lab
+````
