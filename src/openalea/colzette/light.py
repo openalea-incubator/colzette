@@ -1,8 +1,8 @@
 
 from openalea.caribu.CaribuScene import CaribuScene
 
-def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain):
-    zenith = [(RG_daily, (0, 0, -1))]
+def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction = (0, 0, -1)):
+    zenith = [(RG_daily, light_direction)]
     cs = CaribuScene(scene=final_scene, light=zenith, scene_unit='cm', pattern=domain)
     raw, agg = cs.run(infinite=True, simplify=True, direct=True)
 
