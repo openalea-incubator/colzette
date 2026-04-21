@@ -13,7 +13,7 @@ def run_static_simulation(das,
                           density,
                           dict_params,
                           type_simul="monocrop_aviso",
-                          species='Rapeseed'):
+                          species='Rapeseed', ustride=9, vstride=2):
 
     dict_params = dict_params[species]
 
@@ -39,7 +39,7 @@ def run_static_simulation(das,
         list_of_MTGs, list_of_positions = generate_population(sowing_pattern, dict_params, TLA,
                                                               PlantAge, phenotype, species= species)
 
-        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern)
+        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
         caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
 
@@ -60,7 +60,7 @@ def run_static_mixture_simulation(das,
                                    TLA_faba,
                                    PlantAge_rape,
                                    PlantAge_faba,
-                                   Type_simul="intercrop_aviso_RRF"):
+                                   Type_simul="intercrop_aviso_RRF", ustride=9, vstride=2):
 
     dict_params_rape = dict_params['Rapeseed']
     dict_params_faba = dict_params['Fababean']
@@ -87,7 +87,7 @@ def run_static_mixture_simulation(das,
                                                                           PlantAge_rape,
                                                                           PlantAge_faba)
 
-        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=10, vstride=10)
+        final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
         caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain)
 
