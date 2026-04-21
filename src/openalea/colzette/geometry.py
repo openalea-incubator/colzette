@@ -19,14 +19,16 @@ def RapeseedVisitor(
         ustride=9,
         vstride=2,
 ):
-    """
-    Visitor that can handle an MTG file with multiple plants
+    '''
+    Visitor that can handle an MTG file with multiple Rapeseed plants
     This function is called by the scene3D() function when creating the 3D scene
 
-    g is an MTG tree. In contains all the geometrical information needed by the visitor
-    v is the ID of the vertex being generated (int)
-    turtle is the turtle used to create the 3D space
-    """
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
 
     # retrieve the node and its label
     nid = g.node(v)
@@ -81,14 +83,16 @@ def FababeanVisitor(
         ustride=9,
         vstride=2,
 ):
-    """
-    Visitor that can handle an MTG file with multiple plants
+    '''
+    Visitor that can handle an MTG file with multiple Fababean plants
     This function is called by the scene3D() function when creating the 3D scene
 
-    g is an MTG tree. In contains all the geometrical information needed by the visitor
-    v is the ID of the vertex being generated (int)
-    turtle is the turtle used to create the 3D space
-    """
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
 
     # retrieve the node and its label
     nid = g.node(v)
@@ -137,8 +141,8 @@ def multi_leaflets(nb_leaflets=5.0,
                    petiole_leaflet_length2=2.0,
                    coeff_petiole_d=0.5,
                    stem_d=0.035,
-                    ustride=9,
-                    vstride=2):
+                   ustride=9,
+                   vstride=2):
     surface_leaflet = leaf_surface/nb_leaflets # each leaflet has the same surface
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
