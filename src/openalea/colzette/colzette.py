@@ -9,7 +9,7 @@ import openalea.plantgl.all as pgl
 from openalea.mtg import MTG, fat_mtg
 from openalea.plantgl.all import Vector3, Color3, Viewer
 
-def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
+def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
     if option_parameters == "Default":
         params_fn_rape = data_dir / 'parameters' / 'global_params_rapeseed.csv'
         params_fn_faba = data_dir / 'parameters' / 'global_params_fababean.csv'
@@ -41,7 +41,10 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
         dict_params = {}
         for sp in vec_species:
             # here in mixture select columns for species parameters, df_par = ...
-            df_par = par_DOE
+            if sp == "Rapeseed":
+                df_par = par_DOE
+            else:
+                df_par = par_DOE2
             # loop for sp in vec_species
             dict_params_id = {}
             for id in df_par.index:
@@ -83,10 +86,6 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE):
             df_par2 = df_par[df_par['Species']==sp]
             for par in df_par2['Parameter'].unique():
                 dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
-            if sp == 'Rapeseed':
-                dict_params_sp['phylloc'] = 0.016
-            else:
-                dict_params_sp['phylloc'] = 0.0128
             dict_params[sp] = dict_params_sp
     return(dict_params)
 

@@ -95,8 +95,8 @@ def FababeanVisitor(
     coeff_petiole_d = g.node(plant_id).coeff_petiole_d
     stem_d = g.node(plant_id).stem_d
 
-    # turtle.rollL(nid.Phyllotaxy)
-    turtle.rollL(163.5)
+    if label != 'Plant':
+        turtle.rollL(nid.Phyllotaxy)
 
     if g.edge_type(v) == '+':
 
@@ -260,8 +260,7 @@ def phenotype_rapeseed(g,
     ins_angle = dict_params_rape['ins_angle']  # float = 60,
     leaf_angle = 80.0  # à mesurer expérimentallement
     coeff_width = dict_params_rape['coeff_width_leaf']  # float =0.831562,
-    coeff_petiole = dict_params_rape[
-        'coeff_petiole_leaf']  # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
+    coeff_petiole = dict_params_rape['coeff_petiole_leaf']  # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
     stem_d = 0.1
     coeff_petiole_d = 0.5
 
