@@ -16,15 +16,19 @@ def RapeseedVisitor(
         g,
         v,
         turtle,
+        ustride=9,
+        vstride=2,
 ):
-    """
-    Visitor that can handle an MTG file with multiple plants
+    '''
+    Visitor that can handle an MTG file with multiple Rapeseed plants
     This function is called by the scene3D() function when creating the 3D scene
 
-    g is an MTG tree. In contains all the geometrical information needed by the visitor
-    v is the ID of the vertex being generated (int)
-    turtle is the turtle used to create the 3D space
-    """
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
 
     # retrieve the node and its label
     nid = g.node(v)
@@ -63,7 +67,7 @@ def RapeseedVisitor(
 
         turtle.down(nid.LeafAngle - nid.InsertionAngle)
 
-        my_leaf = pgl.Scaled(leafscale, make_leafshape_rapeseed())
+        my_leaf = pgl.Scaled(leafscale, make_leafshape_rapeseed(u = ustride, v = vstride))
         turtle.customGeometry(my_leaf)
 
     if label == 'Internode':
@@ -76,15 +80,19 @@ def FababeanVisitor(
         g,
         v,
         turtle,
+        ustride=9,
+        vstride=2,
 ):
-    """
-    Visitor that can handle an MTG file with multiple plants
+    '''
+    Visitor that can handle an MTG file with multiple Fababean plants
     This function is called by the scene3D() function when creating the 3D scene
 
-    g is an MTG tree. In contains all the geometrical information needed by the visitor
-    v is the ID of the vertex being generated (int)
-    turtle is the turtle used to create the 3D space
-    """
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
 
     # retrieve the node and its label
     nid = g.node(v)
@@ -109,7 +117,9 @@ def FababeanVisitor(
                                        petiole_leaflet_length1=nid.PetioleLength1,
                                        petiole_leaflet_length2=nid.PetioleLength2,
                                        coeff_petiole_d=coeff_petiole_d,
-                                       stem_d=stem_d)
+                                       stem_d=stem_d,
+                                       ustride=ustride,
+                                       vstride=vstride)
 
         turtle.down(nid.InsertionAngle)
 
@@ -130,12 +140,14 @@ def multi_leaflets(nb_leaflets=5.0,
                    petiole_leaflet_length1=2.0,
                    petiole_leaflet_length2=2.0,
                    coeff_petiole_d=0.5,
-                   stem_d=0.035):
+                   stem_d=0.035,
+                   ustride=9,
+                   vstride=2):
     surface_leaflet = leaf_surface/nb_leaflets # each leaflet has the same surface
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
     leafscale = pgl.Vector3(1, leaflet_width, leaflet_length)
-    leafletshape_fababean = make_leaflet_shape_fababean()
+    leafletshape_fababean = make_leaflet_shape_fababean(u=ustride, v=vstride)
     leaflet = pgl.Scaled(leafscale,leafletshape_fababean)
 
     if nb_leaflets < 2:
@@ -162,32 +174,32 @@ def multi_leaflets(nb_leaflets=5.0,
     return leafshape_fababean
 
 # Functions to generate leaf shapes (with leaflets for Fababean)
-def make_leafshape_rapeseed():
+def make_leafshape_rapeseed(u=9, v=2):
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(7,-0.5,1), pts(3,-3,2), pts(1.5,-5,2.75), pts(-1,0,3)]
     r2=[pts(0,0,0), pts(7,0.5,1), pts(3,3,2), pts(1.5,5,2.75), pts(-1,0,3)]
     m=pgl.Point4Matrix([r1,r2])
-    leafshape_rapeseed=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafshape_rapeseed=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafshape_rapeseed)
 
 #original
-def make_leafshape_rapeseed_original():
+def make_leafshape_rapeseed_original(u=9, v=2):
     sc_factor = 3.54673835885395
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(5,-0.5,1), pts(5,-3,2), pts(-1,-5,2.75), pts(-1,0,3)]
     r2=[pts(0,0,0), pts(5,0.5,1), pts(5,3,2), pts(-1,5,2.75), pts(-1,0,3)]
     m=pgl.Point4Matrix([r1,r2])
-    leafshape_rapeseed=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafshape_rapeseed=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafshape_rapeseed)
 
-def make_leaflet_shape_fababean():
+def make_leaflet_shape_fababean(u=9, v=2):
     sc_factor = 3.173
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(0,-1,0.1), pts(0,-2,1), pts(0,-3,2), pts(0,-1,3), pts(0,-1,3.9), pts(0,0,4)]
     r2=[pts(0,0,0), pts(0,1,0.1),  pts(0,2,1),  pts(0,3,2),  pts(0,1,3),  pts(0,1,3.9),  pts(0,0,4)]
     m=pgl.Point4Matrix([r1,r2])
-    leafletshape_fababean=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafletshape_fababean=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafletshape_fababean)
 
 # Create MTGs for rapeseed and Fababean
