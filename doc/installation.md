@@ -31,6 +31,14 @@ cd colzette/test; pytest
 
 ### Install From source
 
+Clone the colzette repository
+
+```bash
+git clone git@github.com:openalea-incubator/colzette.git
+```
+
+After cloning the colzette repo, run the following commands in the colzette/ directory:
+
 ```bash
 # Install dependency with conda
 mamba env create -f conda/environment.yml
@@ -53,4 +61,22 @@ then in `doc/examples` launch jupyter-lab
 ````bash
 cd doc/examples
 jupyter-lab
+````
+
+## Contribute to colzette
+
+You need to create a new branch and update your modifications on this branch. When you're done you can ask for a pull request so that your branch is merged to the main one.
+
+````bash
+# Create new branch
+git branch name_new_branch
+# Check the branches
+git branch
+# Move to new branch
+git switch name_new_branch
+# Add updates to new branch
+git status
+git add your_modifications
+git commit -m "your message"
+git push -u origin name_new_branch
 ````
