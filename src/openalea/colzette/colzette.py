@@ -31,10 +31,10 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
             for par in df_par2['Parameter'].unique():
                 dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
             dict_params[sp] = dict_params_sp
-    elif option_parameters == "DOE_metamodel":
-        if Type_simul == "metamodel_rapeseed":
+    elif option_parameters == "DOE":
+        if Type_simul == "DOE_rapeseed":
             vec_species=['Rapeseed']
-        elif Type_simul == "metamodel_fababean":
+        elif Type_simul == "DOE_fababean":
             vec_species = ['Fababean']
         else:
             vec_species = ['Rapeseed','Fababean']
@@ -212,7 +212,7 @@ def setting_PGLViewer(width=1200, height=1200,
     return
 
 
-def scene3d(g, select_visitor=RapeseedVisitor):
+def scene3d(g, select_visitor):
     """
     calls a PlantGL turtle to generate a 3D scene
     g is an MTG file
