@@ -29,12 +29,10 @@ build:
 requirements:
   host:
     - python
+    - pip
     {% for dep in build_deps %}
     - {{ dep }}
     {% endfor  %}
-
-  build:
-    - {{ compiler("cxx") }}
 
   run:
     - python
