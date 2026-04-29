@@ -263,32 +263,3 @@ def setting_PGLViewer(width=1200, height=1200,
     pgl.Viewer.grids.set(grid, grid, grid, grid)
 
     return
-
-
-def scene3d(g, select_visitor):
-    """
-    calls a PlantGL turtle to generate a 3D scene
-    g is an MTG file
-    """
-    t = pgl.PglTurtle()
-    # set colors
-    colors = dict()
-    colors['Internode'] = (100, 100, 80)
-    colors['Petiole'] = (100, 100, 80)
-    colors['Leaf'] = (9, 82, 40)
-    color = pgl.Color3(*colors['Internode'])
-    t.setColorAt(1, color)
-    color = pgl.Color3(*colors['Petiole'])
-    t.setColorAt(2, color)
-    color = pgl.Color3(*colors['Leaf'])
-    t.setColorAt(3, color)
-
-    max_scale = g.max_scale()
-
-    vid = next(g.component_roots_at_scale_iter(g.root, scale=max_scale))
-
-    scene = turtle.TurtleFrame(
-        g,
-        visitor=select_visitor, turtle=t, gc=False, all_roots=True)
-
-    return scene

@@ -274,6 +274,34 @@ def sowing_map_intercrop(
     data2 = pd.DataFrame(data, columns=["x", "y", "species"])
     return data2
 
+def scene3d(g, select_visitor):
+    """
+    calls a PlantGL turtle to generate a 3D scene
+    g is an MTG file
+    """
+    t = pgl.PglTurtle()
+    # set colors
+    colors = dict()
+    colors['Internode'] = (100, 100, 80)
+    colors['Petiole'] = (100, 100, 80)
+    colors['Leaf'] = (9, 82, 40)
+    color = pgl.Color3(*colors['Internode'])
+    t.setColorAt(1, color)
+    color = pgl.Color3(*colors['Petiole'])
+    t.setColorAt(2, color)
+    color = pgl.Color3(*colors['Leaf'])
+    t.setColorAt(3, color)
+
+    max_scale = g.max_scale()
+
+    vid = next(g.component_roots_at_scale_iter(g.root, scale=max_scale))
+
+    scene = turtle.TurtleFrame(
+        g,
+        visitor=select_visitor, turtle=t, gc=False, all_roots=True)
+
+    return scene
+
  # backward compatibility
 create_rapeseed_scene=create_scene_one_species
 create_fababean_scene = partial(create_scene_one_species, visitor = FababeanVisitor)
