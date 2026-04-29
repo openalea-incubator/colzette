@@ -9,28 +9,69 @@ import openalea.plantgl.all as pgl
 from openalea.mtg import MTG, fat_mtg
 from openalea.plantgl.all import Vector3, Color3, Viewer
 
-def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
-    if option_parameters == "Default":
-        params_fn_rape = data_dir / 'parameters' / 'global_params_rapeseed.csv'
-        params_fn_faba = data_dir / 'parameters' / 'global_params_fababean.csv'
-        df_par_rape = pd.read_csv(params_fn_rape,sep='\t')
-        df_par_faba = pd.read_csv(params_fn_faba,sep='\t')
+def get_params_monocrop(species, param_file, option_parameters):
+    df_par = param_file
+    dict_params = {} 
+    if option_parameters == "One simulation":
+        dict_params = {}
+        dict_params[species] = {}
+        for par in df_par['Parameter'].unique():
+            dict_params[species][par] = df_par.loc[df_par['Parameter']==par,'Value'].iloc[0]
 
-        if Type_simul == "monocrop_aviso" or Type_simul == "monocrop_vigo":
-            df_par = df_par_rape
-        elif Type_simul == "monocrop_faba":
-            df_par = df_par_faba
-        else:
-            df_par = pd.concat([df_par_rape, df_par_faba])
+    elif option_parameters == "DOE":
+        dict_params = {}
+        dict_params[species] = {}
+        dict_params_id = {}
+        for id in df_par.index:
+            df_par2 = df_par.iloc[id]
+            dict_params_sp = {}
+            for par in df_par2.keys():
+                dict_params_sp[par] = df_par2[par]
+                # here also set default parameter values
+            dict_params_id[id] = dict_params_sp
+        dict_params[species] = dict_params_id
+    return dict_params
 
-        df_par = df_par[df_par['Level']=='Default']
-        dict_params = {} 
+def get_params_intercrop(species_brassica,
+                         species_legume,
+                         param_file_brassica,
+                         param_file_legume,
+                         option_parameters):
+    if option_parameters == "One simulation":
+        df_par = pd.concat([param_file_brassica, param_file_legume])
+        dict_params = {}
         for sp in df_par['Species'].unique():
             dict_params_sp = {}
             df_par2 = df_par[df_par['Species']==sp]
             for par in df_par2['Parameter'].unique():
                 dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
             dict_params[sp] = dict_params_sp
+    
+    elif option_parameters == "DOE":
+        dict_params = {}
+        for sp in [species_brassica, species_legume]:
+            # here in mixture select columns for species parameters, df_par = ...
+            if sp == species_brassica:
+                df_par = param_file_brassica
+            else:
+                df_par = param_file_legume
+            # loop for sp in vec_species
+            dict_params_id = {}
+            for id in df_par.index:
+                df_par2 = df_par.iloc[id]
+                dict_params_sp = {}
+                for par in df_par2.keys():
+                    dict_params_sp[par] = df_par2[par]
+                    # here also set default parameter values
+                dict_params_id[id] = dict_params_sp
+            dict_params[sp] = dict_params_id
+    
+    return dict_params
+
+
+
+"""
+def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
     elif option_parameters == "DOE":
         if Type_simul == "DOE_rapeseed":
             vec_species=['Rapeseed']
@@ -58,8 +99,10 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
     else:
         params_fn_rape = data_dir / 'parameters' / 'type_params_rapeseed.csv'
         params_fn_faba = data_dir / 'parameters' / 'type_params_fababean.csv'
-        df_par_rape = pd.read_csv(params_fn_rape,sep='\t')
-        df_par_faba = pd.read_csv(params_fn_faba,sep='\t')
+        params_fn_came = data_dir / 'parameters' / 'type_params_camelina.csv'
+        params_fn_lent = data_dir / 'parameters' / 'type_params_lentil.csv'
+        df_par_came = pd.read_csv(params_fn_came,sep=';')
+        df_par_lent = pd.read_csv(params_fn_lent,sep=';')
 
         if Type_simul == "monocrop_aviso" or Type_simul == "monocrop_vigo":
             df_par = df_par_rape
@@ -67,16 +110,25 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
         elif Type_simul == "monocrop_faba":
             df_par = df_par_faba
             df_par = df_par[df_par['Treatment'] == Type_simul]
-        else:
+        elif Type_simul == "intercrop_aviso_RRF" or Type_simul == "intercrop_vigo":
             if Type_simul == "intercrop_aviso_RRF":
                 Type_simul2 = "intercrop_faba_aviso_RRF"
-            elif Type_simul == "intercrop_aviso_RF":
-                Type_simul2 = "intercrop_faba_aviso_RF"
             elif Type_simul == "intercrop_vigo":
                 Type_simul2 = "intercrop_faba_vigo"
             df_par_rape = df_par_rape[df_par_rape['Treatment'] == Type_simul]
             df_par_faba = df_par_faba[df_par_faba['Treatment'] == Type_simul2]
             df_par = pd.concat([df_par_rape, df_par_faba])
+
+        elif Type_simul == "monocrop_camelina":
+            df_par = df_par_came
+            df_par = df_par[df_par['Treatment'] == Type_simul]
+        elif Type_simul == "monocrop_lentil":
+            df_par = df_par_lent
+            df_par = df_par[df_par['Treatment'] == Type_simul]
+        elif Type_simul == "intercrop_camelina_lentil":
+            df_par_came = df_par_came[df_par_came['Treatment'] == Type_simul]
+            df_par_lent = df_par_lent[df_par_lent['Treatment'] == Type_simul]
+            df_par = pd.concat([df_par_lent, df_par_came])
         
         df_par = df_par[df_par['Level'] == 'Default']
 
@@ -88,11 +140,12 @@ def df_to_dict(data_dir,option_parameters,Type_simul,par_DOE,par_DOE2):
                 dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
             dict_params[sp] = dict_params_sp
     return(dict_params)
+"""
 
 def compute_thermal_time(vec_temp, idx_begin, Tb):
-    vec_temp2 = vec_temp
+    vec_temp2 = vec_temp - Tb
+    vec_temp2[vec_temp2 < 0] = 0
     vec_temp2[:idx_begin] = 0
-    vec_temp2[vec_temp2 < Tb] = 0
     vec_TT = vec_temp2.cumsum()
     return vec_TT
 
