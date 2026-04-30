@@ -98,98 +98,45 @@ def create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=9, vst
         turtle.move(list_of_positions[plant_index])
         turtle.rollR(angle_roll)
         if sowing_pattern['species'][plant_index] == "Fababean":
-            scene = turt.TurtleFrame(new_MTG,
-                                        visitor=FababeanVisitor,
-                                        turtle=turtle, gc=False)
-            scene_dict = scene.todict()
-            dict_organs = {}
-
-            for old_shape_id in scene_dict.keys():
-                shapes = scene_dict[old_shape_id]
-                shape = shapes[0]
-                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                shape.id = unique_shape_id
-                final_scene += shape
-                unique_shape_id += 1
+            visitor = partial(FababeanVisitor, ustride=ustride, vstride=vstride)
         elif sowing_pattern['species'][plant_index] == "Lentil":
-            scene = turt.TurtleFrame(new_MTG,
-                                        visitor=LentilVisitor,
-                                        turtle=turtle, gc=False)
-            scene_dict = scene.todict()
-            dict_organs = {}
+            visitor = partial(LentilVisitor, ustride=ustride, vstride=vstride)
+        elif sowing_pattern['species'][plant_index] == "Rapeseed":
+            visitor = partial(RapeseedVisitor, ustride=ustride, vstride=vstride)
+        elif sowing_pattern['species'][plant_index] == "Camelina":
+            visitor = partial(CamelinaVisitor, ustride=ustride, vstride=vstride)
+        scene = turt.TurtleFrame(new_MTG,
+                                    visitor=visitor,
+                                    turtle=turtle, gc=False)
+        scene_dict = scene.todict()
+        dict_organs = {}
 
-            for old_shape_id in scene_dict.keys():
-                shapes = scene_dict[old_shape_id]
+        for old_shape_id in scene_dict.keys():
+            shapes = scene_dict[old_shape_id]
+            if len(shapes)==1:
+                # internode shape
                 shape = shapes[0]
+                dict_organs[unique_shape_id] = 'Internode'
                 shapes_indexer[plant_index][unique_shape_id] = old_shape_id
                 shape.id = unique_shape_id
                 final_scene += shape
                 unique_shape_id += 1
-        elif sowing_pattern['species'][plant_index] == "Rapeseed":
-            scene = turt.TurtleFrame(new_MTG,
-                                        visitor=visitor,
-                                        turtle=turtle, gc=False)
-            scene_dict = scene.todict()
-            dict_organs = {}
+            elif len(shapes)==2:
+                # leaf shape with leaf + petiole
+                shape1 = shapes[0] # leaf
+                dict_organs[unique_shape_id] = 'Leaf'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape1.id = unique_shape_id
+                final_scene += shape1
+                unique_shape_id += 1
 
-            for old_shape_id in scene_dict.keys():
-                shapes = scene_dict[old_shape_id]
-                if len(shapes)==1:
-                    # internode shape
-                    shape = shapes[0]
-                    dict_organs[unique_shape_id] = 'Internode'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape.id = unique_shape_id
-                    final_scene += shape
-                    unique_shape_id += 1
-                elif len(shapes)==2:
-                    # leaf shape with leaf + petiole
-                    shape1 = shapes[0] # leaf
-                    dict_organs[unique_shape_id] = 'Leaf'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape1.id = unique_shape_id
-                    final_scene += shape1
-                    unique_shape_id += 1
+                shape2 = shapes[1] # petiole
+                dict_organs[unique_shape_id] = 'Petiole'
+                shapes_indexer[plant_index][unique_shape_id] = old_shape_id
+                shape2.id = unique_shape_id
+                final_scene += shape2
+                unique_shape_id += 1
 
-                    shape2 = shapes[1] # petiole
-                    dict_organs[unique_shape_id] = 'Petiole'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape2.id = unique_shape_id
-                    final_scene += shape2
-                    unique_shape_id += 1
-        elif sowing_pattern['species'][plant_index] == "Camelina":
-            scene = turt.TurtleFrame(new_MTG,
-                                        visitor=CamelinaVisitor,
-                                        turtle=turtle, gc=False)
-            scene_dict = scene.todict()
-            dict_organs = {}
-
-            for old_shape_id in scene_dict.keys():
-                shapes = scene_dict[old_shape_id]
-                if len(shapes)==1:
-                    # internode shape
-                    shape = shapes[0]
-                    dict_organs[unique_shape_id] = 'Internode'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape.id = unique_shape_id
-                    final_scene += shape
-                    unique_shape_id += 1
-                elif len(shapes)==2:
-                    # leaf shape with leaf + petiole
-                    shape1 = shapes[0] # leaf
-                    dict_organs[unique_shape_id] = 'Leaf'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape1.id = unique_shape_id
-                    final_scene += shape1
-                    unique_shape_id += 1
-
-                    shape2 = shapes[1] # petiole
-                    dict_organs[unique_shape_id] = 'Petiole'
-                    shapes_indexer[plant_index][unique_shape_id] = old_shape_id
-                    shape2.id = unique_shape_id
-                    final_scene += shape2
-                    unique_shape_id += 1
-                
 
     return final_scene, shapes_indexer
 
@@ -307,7 +254,5 @@ def scene3d(g, select_visitor):
 create_rapeseed_scene=create_scene_one_species
 create_fababean_scene = partial(create_scene_one_species, visitor = FababeanVisitor)
 
-create_camelina_scene = partial(create_scene_one_species, visitor = CamelinaVisitor)
-create_lentil_scene = partial(create_scene_one_species, visitor = LentilVisitor)
 
 create_mixture_scene = create_scene

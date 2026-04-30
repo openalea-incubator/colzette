@@ -79,6 +79,8 @@ def CamelinaVisitor(
         g,
         v,
         turtle,
+        ustride=9,
+        vstride=2,
 ):
     """
     Visitor that can handle an MTG file with multiple plants
@@ -196,6 +198,8 @@ def LentilVisitor(
         g,
         v,
         turtle,
+        ustride=9,
+        vstride=2,
 ):
     """
     Visitor that can handle an MTG file with multiple plants
@@ -287,7 +291,9 @@ def multi_leaflets_lentil(nb_leaflets=5.0,
                    coeff_width=0.7,
                    petiole_leaflet_length=2.0,
                    coeff_petiole_d=0.5,
-                   stem_d=0.035):
+                   stem_d=0.035,
+                   ustride=9,
+                   vstride=2):
     surface_leaflet = leaf_surface/nb_leaflets # each leaflet has the same surface
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
@@ -679,5 +685,4 @@ def phenotype_lentil(g,
 # backward compatibility
 vegetative_fababean = vegetative
 vegetative_rapeseed = partial(vegetative, species='Rapeseed')
-vegetative_camelina = partial(vegetative, species='Camelina')
-vegetative_lentil = partial(vegetative, species='Lentil')
+

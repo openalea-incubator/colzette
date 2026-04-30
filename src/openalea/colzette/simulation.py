@@ -67,7 +67,7 @@ def run_static_mixture_simulation(das,
                                    species_brassica = 'Rapeseed',
                                    species_legume = 'Fababean',
                                    sowing_option = 'rows',
-                                   Type_simul="intercrop_aviso_RRF"):
+                                   Type_simul="intercrop_aviso_RRF", ustride=9, vstride=2, light_direction = (0, 0, -1)):
 
     dict_params_brassica = dict_params[species_brassica]
     dict_params_legume = dict_params[species_legume]
