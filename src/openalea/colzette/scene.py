@@ -5,6 +5,7 @@ import pandas as pd
 from functools import partial
 
 from openalea.mtg import turtle as turt
+from openalea.mtg.plantframe.turtle import visitor
 from openalea.plantgl import all as pgl
 
 from openalea.colzette.geometry import RapeseedVisitor, FababeanVisitor, CamelinaVisitor, LentilVisitor
@@ -79,7 +80,7 @@ def create_scene_one_species(list_of_MTGs, list_of_positions, visitor = Rapeseed
                 unique_shape_id += 1
     return final_scene, shapes_indexer
 
-def create_scene(list_of_MTGs, list_of_positions, sowing_pattern):
+def create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=9, vstride=2):
     list_rotation = []
     shapes_indexer = {}
     unique_shape_id = 1
@@ -126,7 +127,7 @@ def create_scene(list_of_MTGs, list_of_positions, sowing_pattern):
                 unique_shape_id += 1
         elif sowing_pattern['species'][plant_index] == "Rapeseed":
             scene = turt.TurtleFrame(new_MTG,
-                                        visitor=RapeseedVisitor,
+                                        visitor=visitor,
                                         turtle=turtle, gc=False)
             scene_dict = scene.todict()
             dict_organs = {}
