@@ -30,7 +30,6 @@ requirements:
   host:
     - python
     - pip
-    - conda-build
     {% for dep in build_deps %}
     - {{ dep }}
     {% endfor  %}
