@@ -31,14 +31,6 @@ def get_params_monocrop(species, param_file, option_parameters):
             dict_params_id[id] = dict_params_sp
         dict_params[species] = dict_params_id
 
-    # @MeijeGawinowski below is-it at the right place?
-    # that was previously in colzette.df_to_dict() and it is needed by geometry.vegetative()
-    if species == "Rapeseed":
-        phylloc = 0.016
-    elif species == "Fababean":
-        phylloc = 0.0128
-    dict_params[species]['phylloc'] = phylloc
-
     return dict_params
 
 def get_params_intercrop(species_brassica,
@@ -55,14 +47,6 @@ def get_params_intercrop(species_brassica,
             for par in df_par2['Parameter'].unique():
                 dict_params_sp[par] = df_par2.loc[df_par2['Parameter']==par,'Value'].iloc[0]
             dict_params[sp] = dict_params_sp
-
-            # @MeijeGawinowski below is-it at the right place?
-            # that was previously in colzette.df_to_dict() and it is needed by geometry.vegetative()
-            if sp == "Rapeseed":
-                phylloc = 0.016
-            elif sp == "Fababean":
-                phylloc = 0.0128
-            dict_params[sp]['phylloc'] = phylloc
     
     elif option_parameters == "DOE":
         dict_params = {}
@@ -82,14 +66,6 @@ def get_params_intercrop(species_brassica,
                     # here also set default parameter values
                 dict_params_id[id] = dict_params_sp
             dict_params[sp] = dict_params_id
-
-            # @MeijeGawinowski below is-it at the right place?
-            # that was previously in colzette.df_to_dict() and it is needed by geometry.vegetative()
-            if sp == "Rapeseed":
-                phylloc = 0.016
-            elif sp == "Fababean":
-                phylloc = 0.0128
-            dict_params[sp]['phylloc'] = phylloc
     
     return dict_params
 
