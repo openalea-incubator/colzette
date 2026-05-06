@@ -9,6 +9,12 @@ from openalea.mtg.plantframe.turtle import visitor
 from openalea.plantgl import all as pgl
 
 from openalea.colzette.geometry import RapeseedVisitor, FababeanVisitor, CamelinaVisitor, LentilVisitor
+from openalea.colzette.geometry import (LegumeVisitor,
+                                        make_leaflet_shape_fababean,
+                                        make_leaflet_shape_lentil,
+                                        BrassicaVisitor,
+                                        make_leafshape_rapeseed,
+                                        make_leafshape_camelina)
 
 def create_scene_one_species(list_of_MTGs, list_of_positions, visitor = RapeseedVisitor):
     # function 2 to compute final scene and new indices
@@ -98,13 +104,13 @@ def create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=9, vst
         turtle.move(list_of_positions[plant_index])
         turtle.rollR(angle_roll)
         if sowing_pattern['species'][plant_index] == "Fababean":
-            visitor = partial(FababeanVisitor, ustride=ustride, vstride=vstride)
+            visitor = partial(LegumeVisitor,make_leaflet_shape=make_leaflet_shape_fababean, ustride=ustride, vstride=vstride)
         elif sowing_pattern['species'][plant_index] == "Lentil":
-            visitor = partial(LentilVisitor, ustride=ustride, vstride=vstride)
+            visitor = partial(LegumeVisitor, make_leaflet_shape=make_leaflet_shape_lentil,ustride=ustride, vstride=vstride)
         elif sowing_pattern['species'][plant_index] == "Rapeseed":
-            visitor = partial(RapeseedVisitor, ustride=ustride, vstride=vstride)
+            visitor = partial(BrassicaVisitor, make_leafshape=make_leafshape_rapeseed,ustride=ustride, vstride=vstride)
         elif sowing_pattern['species'][plant_index] == "Camelina":
-            visitor = partial(CamelinaVisitor, ustride=ustride, vstride=vstride)
+            visitor = partial(BrassicaVisitor, make_leafshape=make_leafshape_camelina,ustride=ustride, vstride=vstride)
         scene = turt.TurtleFrame(new_MTG,
                                     visitor=visitor,
                                     turtle=turtle, gc=False)
