@@ -128,7 +128,7 @@ def CamelinaVisitor(
 
         turtle.down(nid.LeafAngle - nid.InsertionAngle)
 
-        my_leaf = pgl.Scaled(leafscale, make_leafshape_camelina())
+        my_leaf = pgl.Scaled(leafscale, make_leafshape_camelina(u = ustride, v = vstride))
         turtle.customGeometry(my_leaf)
 
     if label == 'Internode':
@@ -232,7 +232,9 @@ def LentilVisitor(
                                        coeff_width=nid.coeff_width,
                                        petiole_leaflet_length=nid.PetioleLength,
                                        coeff_petiole_d=coeff_petiole_d,
-                                       stem_d=stem_d)
+                                       stem_d=stem_d,
+                                       ustride=ustride,
+                                       vstride=vstride)
 
         turtle.down(nid.InsertionAngle)
 
@@ -298,7 +300,7 @@ def multi_leaflets_lentil(nb_leaflets=5.0,
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
     leafscale = pgl.Vector3(1, leaflet_width, leaflet_length)
-    leafletshape_lentil = make_leaflet_shape_lentil()
+    leafletshape_lentil = make_leaflet_shape_lentil(u=ustride, v=vstride)
     leaflet = pgl.Scaled(leafscale,leafletshape_lentil)
 
     if nb_leaflets < 2:
@@ -353,22 +355,22 @@ def make_leaflet_shape_fababean(u=9, v=2):
     leafletshape_fababean=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafletshape_fababean)
 
-def make_leafshape_camelina():
+def make_leafshape_camelina(u=9, v=2):
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(0,-0.5,1), pts(0,-3,2), pts(0,-5,2.75), pts(0,0,3)]
     r2=[pts(0,0,0), pts(0,0.5,1), pts(0,3,2), pts(0,5,2.75), pts(0,0,3)]
     m=pgl.Point4Matrix([r1,r2])
-    leafshape_camelina=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafshape_camelina=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafshape_camelina)
 
-def make_leaflet_shape_lentil():
+def make_leaflet_shape_lentil(u=9, v=2):
     sc_factor = 3.173
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(0,-1,0.1), pts(0,-2,1), pts(0,-3,2), pts(0,-1,3), pts(0,-1,3.9), pts(0,0,4)]
     r2=[pts(0,0,0), pts(0,1,0.1),  pts(0,2,1),  pts(0,3,2),  pts(0,1,3),  pts(0,1,3.9),  pts(0,0,4)]
     m=pgl.Point4Matrix([r1,r2])
-    leafletshape_lentil=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafletshape_lentil=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafletshape_lentil)
 
 # Create MTGs for rapeseed and Fababean
