@@ -1,103 +1,109 @@
-"Species"	"Treatment"	"Parameter"	"Level"	"Value"
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"Default"	0.674369883186819
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"q1"	0.608143839238498
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"q3"	0.736314402810304
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"Default"	0.739338834306975
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"q1"	0.681427125506073
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"q3"	0.765389876880985
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"Default"	0.689338593883058
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"q1"	0.651434426229508
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"q3"	0.737533692722372
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"Default"	0.536716014505183
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"q1"	0.5
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"q3"	0.563741422896353
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"Default"	0.467897535010638
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"q1"	0.372549019607843
-"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"q3"	0.552631578947368
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"Default"	0.532413621331125
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"q1"	0.5
-"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"q3"	0.573770491803279
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"Default"	0.227539887431725
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"q1"	0.185984354628422
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"q3"	0.305397727272727
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"Default"	0.19943638296351
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"q1"	0.136363636363636
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"q3"	0.288461538461538
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"Default"	0.25021489346317
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"q1"	0.176912568306011
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"q3"	0.356501391348343
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"Default"	0.940215372841788
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"q1"	0.833333333333333
-"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"q3"	1.04
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"Default"	0.531815961585993
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"q1"	0.197368421052632
-"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"q3"	0.789473684210526
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"Default"	0.997521238367122
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"q1"	0.888544891640867
-"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"q3"	1.11346153846154
-"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"Default"	36.5909090909091
-"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"q1"	25
-"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"q3"	45
-"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"Default"	52.5
-"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"q1"	33.75
-"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"q3"	70
-"Fababean"	"monocrop_faba"	"ins_angle"	"Default"	35.3378378378378
-"Fababean"	"monocrop_faba"	"ins_angle"	"q1"	30
-"Fababean"	"monocrop_faba"	"ins_angle"	"q3"	43.75
-"Fababean"	"intercrop_faba_aviso_RF"	"ins_angle"	"Default"	NA
-"Fababean"	"intercrop_faba_aviso_RF"	"ins_angle"	"q1"	NA
-"Fababean"	"intercrop_faba_aviso_RF"	"ins_angle"	"q3"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"Default"	0.631174811075094
-"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"q1"	0.565606867122757
-"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"q3"	0.716862590850988
-"Fababean"	"intercrop_faba_vigo"	"rmax"	"Default"	0.703267425073356
-"Fababean"	"intercrop_faba_vigo"	"rmax"	"q1"	0.635581723665896
-"Fababean"	"intercrop_faba_vigo"	"rmax"	"q3"	0.76939753661012
-"Fababean"	"monocrop_faba"	"rmax"	"Default"	0.642321291818379
-"Fababean"	"monocrop_faba"	"rmax"	"q1"	0.564488613361871
-"Fababean"	"monocrop_faba"	"rmax"	"q3"	0.722340850504923
-"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"Default"	2.32545671228301
-"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"q1"	1.2262242541545
-"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"q3"	2.11939966290699
-"Fababean"	"intercrop_faba_vigo"	"k"	"Default"	4.17543840243239
-"Fababean"	"intercrop_faba_vigo"	"k"	"q1"	1.05468649830538
-"Fababean"	"intercrop_faba_vigo"	"k"	"q3"	5.7823412220726
-"Fababean"	"monocrop_faba"	"k"	"Default"	2.16111930978653
-"Fababean"	"monocrop_faba"	"k"	"q1"	1.2283648538666
-"Fababean"	"monocrop_faba"	"k"	"q3"	2.20300122289185
-"Fababean"	"monocrop_faba"	"L_height"	"Default"	71.914691532791
-"Fababean"	"monocrop_faba"	"L_height"	"q1"	NA
-"Fababean"	"monocrop_faba"	"L_height"	"q3"	NA
-"Fababean"	"monocrop_faba"	"x0_height"	"Default"	537.427579096911
-"Fababean"	"monocrop_faba"	"x0_height"	"q1"	NA
-"Fababean"	"monocrop_faba"	"x0_height"	"q3"	NA
-"Fababean"	"monocrop_faba"	"k_height"	"Default"	0.0218146935545291
-"Fababean"	"monocrop_faba"	"k_height"	"q1"	NA
-"Fababean"	"monocrop_faba"	"k_height"	"q3"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"Default"	64.7912294928082
-"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"q1"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"q3"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"Default"	521.41274635353
-"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"q1"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"q3"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"Default"	0.0221059857423279
-"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"q1"	NA
-"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"q3"	NA
-"Fababean"	"intercrop_faba_vigo"	"L_height"	"Default"	55.2036327223325
-"Fababean"	"intercrop_faba_vigo"	"L_height"	"q1"	NA
-"Fababean"	"intercrop_faba_vigo"	"L_height"	"q3"	NA
-"Fababean"	"intercrop_faba_vigo"	"x0_height"	"Default"	506.084987781774
-"Fababean"	"intercrop_faba_vigo"	"x0_height"	"q1"	NA
-"Fababean"	"intercrop_faba_vigo"	"x0_height"	"q3"	NA
-"Fababean"	"intercrop_faba_vigo"	"k_height"	"Default"	0.0208841548828232
-"Fababean"	"intercrop_faba_vigo"	"k_height"	"q1"	NA
-"Fababean"	"intercrop_faba_vigo"	"k_height"	"q3"	NA
-"Fababean"	"intercrop_faba_vigo"	"phyllot"	"Default"	194.318181818182
-"Fababean"	"intercrop_faba_vigo"	"phyllot"	"q1"	156
-"Fababean"	"intercrop_faba_vigo"	"phyllot"	"q3"	231
-"Fababean"	"monocrop_faba"	"phyllot"	"Default"	170.176470588235
-"Fababean"	"monocrop_faba"	"phyllot"	"q1"	159.75
-"Fababean"	"monocrop_faba"	"phyllot"	"q3"	190.5
-"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"Default"	180.5
-"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"q1"	170.25
-"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"q3"	190.5
+"Species"	"Treatment"	"Parameter"	"Level"	"Value"	"Pvalue"	"se"
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"Default"	0.674369883186819	0.264	0.0174255088330033
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"q1"	0.608143839238498	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet1"	"q3"	0.736314402810304	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"Default"	0.739338834306975	0.009	0.0189522018759508
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"q1"	0.681427125506073	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet1"	"q3"	0.765389876880985	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"Default"	0.689338593883058	0.264	0.0109354910846256
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"q1"	0.651434426229508	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet1"	"q3"	0.737533692722372	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"Default"	0.536716014505183	0.299	0.00526610673908381
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"q1"	0.5	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_width_leaflet2"	"q3"	0.563741422896353	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"Default"	0.467897535010638	0.001	0.0197062066861083
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"q1"	0.372549019607843	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_width_leaflet2"	"q3"	0.552631578947368	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"Default"	0.532413621331125	0.299	0.00581803403921461
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"q1"	0.5	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_width_leaflet2"	"q3"	0.573770491803279	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"Default"	0.227539887431725	0.151	0.0140557180103241
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"q1"	0.185984354628422	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet1"	"q3"	0.305397727272727	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"Default"	0.19943638296351	0.056	0.0229059356078129
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"q1"	0.136363636363636	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet1"	"q3"	0.288461538461538	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"Default"	0.25021489346317	0.151	0.0156007132302456
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"q1"	0.176912568306011	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet1"	"q3"	0.356501391348343	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"Default"	0.940215372841788	0.272	0.0432349640059454
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"q1"	0.833333333333333	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"coeff_petiole_leaflet2"	"q3"	1.04	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"Default"	0.531815961585993	0.007	0.110916846586918
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"q1"	0.197368421052632	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"coeff_petiole_leaflet2"	"q3"	0.789473684210526	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"Default"	0.997521238367122	0.272	0.0737463327786973
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"q1"	0.888544891640867	NA	NA
+"Fababean"	"monocrop_faba"	"coeff_petiole_leaflet2"	"q3"	1.11346153846154	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"Default"	36.5909090909091	0.299	2.44804754186876
+"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"q1"	25	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"ins_angle"	"q3"	45	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"Default"	52.5	0.002	7.66485485837795
+"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"q1"	33.75	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"ins_angle"	"q3"	70	NA	NA
+"Fababean"	"monocrop_faba"	"ins_angle"	"Default"	35.3378378378378	0.299	1.27390536774839
+"Fababean"	"monocrop_faba"	"ins_angle"	"q1"	30	NA	NA
+"Fababean"	"monocrop_faba"	"ins_angle"	"q3"	43.75	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"Default"	0.631174811075094	0.407	0.0354895087554532
+"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"q1"	0.565606867122757	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"rmax"	"q3"	0.716862590850988	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"rmax"	"Default"	0.703267425073356	0.203	0.0453306083696814
+"Fababean"	"intercrop_faba_vigo"	"rmax"	"q1"	0.635581723665896	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"rmax"	"q3"	0.76939753661012	NA	NA
+"Fababean"	"monocrop_faba"	"rmax"	"Default"	0.642321291818379	0.407	0.0499089399701729
+"Fababean"	"monocrop_faba"	"rmax"	"q1"	0.564488613361871	NA	NA
+"Fababean"	"monocrop_faba"	"rmax"	"q3"	0.722340850504923	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"Default"	2.32545671228301	0.424	0.770704567617404
+"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"q1"	1.2262242541545	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"k"	"q3"	2.11939966290699	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"k"	"Default"	4.17543840243239	0.116	2.21711277013458
+"Fababean"	"intercrop_faba_vigo"	"k"	"q1"	1.05468649830538	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"k"	"q3"	5.7823412220726	NA	NA
+"Fababean"	"monocrop_faba"	"k"	"Default"	2.16111930978653	0.424	0.564649959826802
+"Fababean"	"monocrop_faba"	"k"	"q1"	1.2283648538666	NA	NA
+"Fababean"	"monocrop_faba"	"k"	"q3"	2.20300122289185	NA	NA
+"Fababean"	"monocrop_faba"	"L_height"	"Default"	29.3103473637122	NA	2.38569003040571
+"Fababean"	"monocrop_faba"	"L_height"	"q1"	24.634394904117	NA	2.38569003040571
+"Fababean"	"monocrop_faba"	"L_height"	"q3"	33.9862998233074	NA	2.38569003040571
+"Fababean"	"monocrop_faba"	"x0_height"	"Default"	521.436608126451	NA	120.347690651496
+"Fababean"	"monocrop_faba"	"x0_height"	"q1"	285.555134449519	NA	120.347690651496
+"Fababean"	"monocrop_faba"	"x0_height"	"q3"	757.318081803382	NA	120.347690651496
+"Fababean"	"monocrop_faba"	"k_height"	"Default"	0.0118409204221468	NA	0.0181029867414191
+"Fababean"	"monocrop_faba"	"k_height"	"q1"	-0.0236409335910346	NA	0.0181029867414191
+"Fababean"	"monocrop_faba"	"k_height"	"q3"	0.0473227744353282	NA	0.0181029867414191
+"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"Default"	39.266801048852	NA	2.217615797221
+"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"q1"	34.9202740862989	NA	2.217615797221
+"Fababean"	"intercrop_faba_aviso_RRF"	"L_height"	"q3"	43.6133280114052	NA	2.217615797221
+"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"Default"	467.492598148174	NA	214.936239655681
+"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"q1"	46.2175684230381	NA	214.936239655681
+"Fababean"	"intercrop_faba_aviso_RRF"	"x0_height"	"q3"	888.767627873309	NA	214.936239655681
+"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"Default"	0.0471506938911511	NA	0.451854770903754
+"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"q1"	-0.838484657080206	NA	0.451854770903754
+"Fababean"	"intercrop_faba_aviso_RRF"	"k_height"	"q3"	0.932786044862508	NA	0.451854770903754
+"Fababean"	"intercrop_faba_vigo"	"L_height"	"Default"	40.9997023220746	NA	2.53490761802821
+"Fababean"	"intercrop_faba_vigo"	"L_height"	"q1"	36.0312833907393	NA	2.53490761802821
+"Fababean"	"intercrop_faba_vigo"	"L_height"	"q3"	45.9681212534099	NA	2.53490761802821
+"Fababean"	"intercrop_faba_vigo"	"x0_height"	"Default"	449.842538658607	NA	186.690625364539
+"Fababean"	"intercrop_faba_vigo"	"x0_height"	"q1"	83.9289129441096	NA	186.690625364539
+"Fababean"	"intercrop_faba_vigo"	"x0_height"	"q3"	815.756164373104	NA	186.690625364539
+"Fababean"	"intercrop_faba_vigo"	"k_height"	"Default"	0.180995089708535	NA	6.97835324261649
+"Fababean"	"intercrop_faba_vigo"	"k_height"	"q1"	-13.4965772658198	NA	6.97835324261649
+"Fababean"	"intercrop_faba_vigo"	"k_height"	"q3"	13.8585674452368	NA	6.97835324261649
+"Fababean"	"monocrop_faba"	"phyllot"	"Default"	163.5	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"Default"	163.5	NA	NA
+"Fababean"	"intercrop_faba_aviso_RF"	"phyllot"	"Default"	163.5	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"phyllot"	"Default"	163.5	NA	NA
+"Fababean"	"monocrop_faba"	"phyllot"	"q1"	147.15	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"q1"	147.15	NA	NA
+"Fababean"	"intercrop_faba_aviso_RF"	"phyllot"	"q1"	147.15	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"phyllot"	"q1"	147.15	NA	NA
+"Fababean"	"monocrop_faba"	"phyllot"	"q3"	179.85	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"phyllot"	"q3"	179.85	NA	NA
+"Fababean"	"intercrop_faba_aviso_RF"	"phyllot"	"q3"	179.85	NA	NA
+"Fababean"	"intercrop_faba_vigo"	"phyllot"	"q3"	179.85	NA	NA
+"Fababean"	"monocrop_faba"	"phylloc"	"Default"	0.0104762642404447	0.424	0.000323240166349429
+"Fababean"	"monocrop_faba"	"phylloc"	"q1"	0.0102381154873481	NA	NA
+"Fababean"	"monocrop_faba"	"phylloc"	"q3"	0.0113203695423924	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"phylloc"	"Default"	0.0104368833122787	0.424	0.000151790444270521
+"Fababean"	"intercrop_faba_aviso_RRF"	"phylloc"	"q1"	0.0100245601724224	NA	NA
+"Fababean"	"intercrop_faba_aviso_RRF"	"phylloc"	"q3"	0.0107336595818904	NA	NA

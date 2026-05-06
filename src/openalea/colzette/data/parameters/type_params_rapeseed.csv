@@ -1,88 +1,103 @@
-"Species"	"Treatment"	"Parameter"	"Level"	"Value"
-"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"Default"	0.432373902691464
-"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"q1"	0.391737443640558
-"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"q3"	0.478349944629014
-"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"Default"	0.393038642261872
-"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"q1"	0.337819111834457
-"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"q3"	0.439072164948454
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"Default"	0.432955729851061
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"q1"	0.389242492155984
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"q3"	0.471030222073802
-"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"Default"	0.377603085947721
-"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"q1"	0.318547657804305
-"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"q3"	0.429010538641686
-"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"Default"	0.395093952763011
-"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"q1"	0.344476055002371
-"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"q3"	0.442434379825013
-"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"Default"	0.397661436124243
-"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"q1"	0.372746253991648
-"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"q3"	0.43857238810527
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"Default"	0.36244952462683
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"q1"	0.284115138592751
-"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"q3"	0.430994300342945
-"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"Default"	0.249667529747796
-"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"q1"	0.14691706469822
-"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"q3"	0.323293172690763
-"Rapeseed"	"monocrop_aviso"	"ins_angle"	"Default"	33.8461538461538
-"Rapeseed"	"monocrop_aviso"	"ins_angle"	"q1"	20
-"Rapeseed"	"monocrop_aviso"	"ins_angle"	"q3"	35
-"Rapeseed"	"monocrop_vigo"	"ins_angle"	"Default"	44.0909090909091
-"Rapeseed"	"monocrop_vigo"	"ins_angle"	"q1"	26.25
-"Rapeseed"	"monocrop_vigo"	"ins_angle"	"q3"	57.5
-"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"Default"	33.4097222222222
-"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"q1"	20
-"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"q3"	40
-"Rapeseed"	"intercrop_vigo"	"ins_angle"	"Default"	31.969696969697
-"Rapeseed"	"intercrop_vigo"	"ins_angle"	"q1"	10
-"Rapeseed"	"intercrop_vigo"	"ins_angle"	"q3"	45
-"Rapeseed"	"monocrop_aviso"	"rmax"	"Default"	0.624657902692764
-"Rapeseed"	"monocrop_aviso"	"rmax"	"q1"	0.573486047966061
-"Rapeseed"	"monocrop_aviso"	"rmax"	"q3"	0.648065096115762
-"Rapeseed"	"monocrop_vigo"	"rmax"	"Default"	0.60905259691865
-"Rapeseed"	"monocrop_vigo"	"rmax"	"q1"	0.549124220262684
-"Rapeseed"	"monocrop_vigo"	"rmax"	"q3"	0.667733659045733
-"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"Default"	0.624251194032368
-"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"q1"	0.57471342414942
-"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"q3"	0.655703268653379
-"Rapeseed"	"intercrop_vigo"	"rmax"	"Default"	0.609686904351311
-"Rapeseed"	"intercrop_vigo"	"rmax"	"q1"	0.519870144010147
-"Rapeseed"	"intercrop_vigo"	"rmax"	"q3"	0.70569995511487
-"Rapeseed"	"monocrop_aviso"	"k"	"Default"	6.49561736248202
-"Rapeseed"	"monocrop_aviso"	"k"	"q1"	3.62740714828621
-"Rapeseed"	"monocrop_aviso"	"k"	"q3"	8.52980046109038
-"Rapeseed"	"monocrop_vigo"	"k"	"Default"	5.60088036045245
-"Rapeseed"	"monocrop_vigo"	"k"	"q1"	2.72717725196216
-"Rapeseed"	"monocrop_vigo"	"k"	"q3"	8.24314708062631
-"Rapeseed"	"intercrop_aviso_RRF"	"k"	"Default"	7.39074533273133
-"Rapeseed"	"intercrop_aviso_RRF"	"k"	"q1"	3.28391734453831
-"Rapeseed"	"intercrop_aviso_RRF"	"k"	"q3"	10.5782617431435
-"Rapeseed"	"intercrop_vigo"	"k"	"Default"	9.96232011705795
-"Rapeseed"	"intercrop_vigo"	"k"	"q1"	4.0252427278207
-"Rapeseed"	"intercrop_vigo"	"k"	"q3"	10.8676893812091
-"Rapeseed"	"monocrop_aviso"	"growth_node"	"Default"	0.000254573569537356
-"Rapeseed"	"monocrop_aviso"	"growth_node"	"q1"	NA
-"Rapeseed"	"monocrop_aviso"	"growth_node"	"q3"	NA
-"Rapeseed"	"monocrop_vigo"	"growth_node"	"Default"	0.000373880555395238
-"Rapeseed"	"monocrop_vigo"	"growth_node"	"q1"	NA
-"Rapeseed"	"monocrop_vigo"	"growth_node"	"q3"	NA
-"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"Default"	0.000266610548751953
-"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"q1"	NA
-"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"q3"	NA
-"Rapeseed"	"intercrop_vigo"	"growth_node"	"Default"	0.000501045428631635
-"Rapeseed"	"intercrop_vigo"	"growth_node"	"q1"	NA
-"Rapeseed"	"intercrop_vigo"	"growth_node"	"q3"	NA
-"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"Default"	0.000161864508188314
-"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"q1"	NA
-"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"q3"	NA
-"Rapeseed"	"monocrop_vigo"	"phyllot"	"Default"	170.714285714286
-"Rapeseed"	"monocrop_vigo"	"phyllot"	"q1"	131
-"Rapeseed"	"monocrop_vigo"	"phyllot"	"q3"	213.25
-"Rapeseed"	"intercrop_vigo"	"phyllot"	"Default"	168.734042553192
-"Rapeseed"	"intercrop_vigo"	"phyllot"	"q1"	114
-"Rapeseed"	"intercrop_vigo"	"phyllot"	"q3"	215
-"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"Default"	186.0625
-"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"q1"	142.125
-"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"q3"	244
-"Rapeseed"	"monocrop_aviso"	"phyllot"	"Default"	167.5
-"Rapeseed"	"monocrop_aviso"	"phyllot"	"q1"	123
-"Rapeseed"	"monocrop_aviso"	"phyllot"	"q3"	219.25
+"Species"	"Treatment"	"Parameter"	"Level"	"Value"	"Pvalue"	"se"
+"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"Default"	0.432373902691464	0.496	0.0103499148160678
+"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"q1"	0.391737443640558	NA	NA
+"Rapeseed"	"monocrop_aviso"	"coeff_width_leaf"	"q3"	0.478349944629014	NA	NA
+"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"Default"	0.393038642261872	0.177	0.0140339454919972
+"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"q1"	0.337819111834457	NA	NA
+"Rapeseed"	"monocrop_vigo"	"coeff_width_leaf"	"q3"	0.439072164948454	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"Default"	0.432955729851061	0.496	0.00714358137116162
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"q1"	0.389242492155984	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_width_leaf"	"q3"	0.471030222073802	NA	NA
+"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"Default"	0.377603085947721	0.177	0.00995378280138677
+"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"q1"	0.318547657804305	NA	NA
+"Rapeseed"	"intercrop_vigo"	"coeff_width_leaf"	"q3"	0.429010538641686	NA	NA
+"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"Default"	0.395093952763011	0.028	0.011304903933943
+"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"q1"	0.344476055002371	NA	NA
+"Rapeseed"	"monocrop_aviso"	"coeff_petiole_leaf"	"q3"	0.442434379825013	NA	NA
+"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"Default"	0.397661436124243	0.001	0.015949597630601
+"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"q1"	0.372746253991648	NA	NA
+"Rapeseed"	"monocrop_vigo"	"coeff_petiole_leaf"	"q3"	0.43857238810527	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"Default"	0.36244952462683	0.028	0.0105727968130699
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"q1"	0.284115138592751	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"coeff_petiole_leaf"	"q3"	0.430994300342945	NA	NA
+"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"Default"	0.249667529747796	0.001	0.0229247313674016
+"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"q1"	0.14691706469822	NA	NA
+"Rapeseed"	"intercrop_vigo"	"coeff_petiole_leaf"	"q3"	0.323293172690763	NA	NA
+"Rapeseed"	"monocrop_aviso"	"ins_angle"	"Default"	37.1518987341772	0.338	2.69438020984803
+"Rapeseed"	"monocrop_aviso"	"ins_angle"	"q1"	20	NA	NA
+"Rapeseed"	"monocrop_aviso"	"ins_angle"	"q3"	47.5	NA	NA
+"Rapeseed"	"monocrop_vigo"	"ins_angle"	"Default"	41.4222222222222	0.161	4.07969706848374
+"Rapeseed"	"monocrop_vigo"	"ins_angle"	"q1"	20	NA	NA
+"Rapeseed"	"monocrop_vigo"	"ins_angle"	"q3"	60	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"Default"	38.3944444444444	0.338	2.53965422809483
+"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"q1"	20	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"ins_angle"	"q3"	45	NA	NA
+"Rapeseed"	"intercrop_vigo"	"ins_angle"	"Default"	35.8510638297872	0.161	4.10128234311091
+"Rapeseed"	"intercrop_vigo"	"ins_angle"	"q1"	12.5	NA	NA
+"Rapeseed"	"intercrop_vigo"	"ins_angle"	"q3"	50	NA	NA
+"Rapeseed"	"monocrop_aviso"	"rmax"	"Default"	0.624657902692764	0.364	0.0270660661042962
+"Rapeseed"	"monocrop_aviso"	"rmax"	"q1"	0.573486047966061	NA	NA
+"Rapeseed"	"monocrop_aviso"	"rmax"	"q3"	0.648065096115762	NA	NA
+"Rapeseed"	"monocrop_vigo"	"rmax"	"Default"	0.60905259691865	0.16	0.0421565426394493
+"Rapeseed"	"monocrop_vigo"	"rmax"	"q1"	0.549124220262684	NA	NA
+"Rapeseed"	"monocrop_vigo"	"rmax"	"q3"	0.667733659045733	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"Default"	0.624251194032368	0.364	0.0159197417588192
+"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"q1"	0.57471342414942	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"rmax"	"q3"	0.655703268653379	NA	NA
+"Rapeseed"	"intercrop_vigo"	"rmax"	"Default"	0.609686904351311	0.16	0.0443252688765832
+"Rapeseed"	"intercrop_vigo"	"rmax"	"q1"	0.519870144010147	NA	NA
+"Rapeseed"	"intercrop_vigo"	"rmax"	"q3"	0.70569995511487	NA	NA
+"Rapeseed"	"monocrop_aviso"	"k"	"Default"	6.49561736248202	0.348	1.27738303368718
+"Rapeseed"	"monocrop_aviso"	"k"	"q1"	3.62740714828621	NA	NA
+"Rapeseed"	"monocrop_aviso"	"k"	"q3"	8.52980046109038	NA	NA
+"Rapeseed"	"monocrop_vigo"	"k"	"Default"	5.60088036045245	0.185	1.85370192257577
+"Rapeseed"	"monocrop_vigo"	"k"	"q1"	2.72717725196216	NA	NA
+"Rapeseed"	"monocrop_vigo"	"k"	"q3"	8.24314708062631	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"k"	"Default"	7.39074533273133	0.348	1.07538655698481
+"Rapeseed"	"intercrop_aviso_RRF"	"k"	"q1"	3.28391734453831	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"k"	"q3"	10.5782617431435	NA	NA
+"Rapeseed"	"intercrop_vigo"	"k"	"Default"	9.96232011705795	0.185	3.44113944954792
+"Rapeseed"	"intercrop_vigo"	"k"	"q1"	4.0252427278207	NA	NA
+"Rapeseed"	"intercrop_vigo"	"k"	"q3"	10.8676893812091	NA	NA
+"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"Default"	0.000161864508188314	0.492	1.53190894090418e-05
+"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"q1"	0.000157590857807105	NA	NA
+"Rapeseed"	"intercrop_aviso_RF"	"growth_node"	"q3"	0.000175219665629594	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"Default"	0.000244821234561268	0.492	3.25429849948347e-05
+"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"q1"	0.000194896264259747	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"growth_node"	"q3"	0.000270308386611508	NA	NA
+"Rapeseed"	"intercrop_vigo"	"growth_node"	"Default"	0.000587277149483336	0.012	5.85648601149137e-05
+"Rapeseed"	"intercrop_vigo"	"growth_node"	"q1"	0.000496544753666792	NA	NA
+"Rapeseed"	"intercrop_vigo"	"growth_node"	"q3"	0.000705152312899586	NA	NA
+"Rapeseed"	"monocrop_aviso"	"growth_node"	"Default"	0.0002148609224309	0.492	1.70438949876874e-05
+"Rapeseed"	"monocrop_aviso"	"growth_node"	"q1"	0.000188040616773223	NA	NA
+"Rapeseed"	"monocrop_aviso"	"growth_node"	"q3"	0.000247586812084744	NA	NA
+"Rapeseed"	"monocrop_vigo"	"growth_node"	"Default"	0.000399562992114233	0.012	3.81247107606708e-05
+"Rapeseed"	"monocrop_vigo"	"growth_node"	"q1"	0.000338864861476746	NA	NA
+"Rapeseed"	"monocrop_vigo"	"growth_node"	"q3"	0.000445617086624044	NA	NA
+"Rapeseed"	"monocrop_aviso"	"phyllot"	"Default"	137.5	NA	NA
+"Rapeseed"	"monocrop_vigo"	"phyllot"	"Default"	137.5	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"Default"	137.5	NA	NA
+"Rapeseed"	"intercrop_aviso_RF"	"phyllot"	"Default"	137.5	NA	NA
+"Rapeseed"	"intercrop_vigo"	"phyllot"	"Default"	137.5	NA	NA
+"Rapeseed"	"monocrop_aviso"	"phyllot"	"q1"	123.75	NA	NA
+"Rapeseed"	"monocrop_vigo"	"phyllot"	"q1"	123.75	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"q1"	123.75	NA	NA
+"Rapeseed"	"intercrop_aviso_RF"	"phyllot"	"q1"	123.75	NA	NA
+"Rapeseed"	"intercrop_vigo"	"phyllot"	"q1"	123.75	NA	NA
+"Rapeseed"	"monocrop_aviso"	"phyllot"	"q3"	151.25	NA	NA
+"Rapeseed"	"monocrop_vigo"	"phyllot"	"q3"	151.25	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"phyllot"	"q3"	151.25	NA	NA
+"Rapeseed"	"intercrop_aviso_RF"	"phyllot"	"q3"	151.25	NA	NA
+"Rapeseed"	"intercrop_vigo"	"phyllot"	"q3"	151.25	NA	NA
+"Rapeseed"	"intercrop_vigo"	"phylloc"	"Default"	0.0121604490621569	0.322	0.000244881958575888
+"Rapeseed"	"intercrop_vigo"	"phylloc"	"q1"	0.0114285905489825	NA	NA
+"Rapeseed"	"intercrop_vigo"	"phylloc"	"q3"	0.0123589772651863	NA	NA
+"Rapeseed"	"monocrop_vigo"	"phylloc"	"Default"	0.0123589759194366	0.322	0.000343402692204727
+"Rapeseed"	"monocrop_vigo"	"phylloc"	"q1"	0.0118664974870585	NA	NA
+"Rapeseed"	"monocrop_vigo"	"phylloc"	"q3"	0.0128098410809507	NA	NA
+"Rapeseed"	"monocrop_aviso"	"phylloc"	"Default"	0.0122353637471544	0.422	0.000343250129158935
+"Rapeseed"	"monocrop_aviso"	"phylloc"	"q1"	0.0105540897097625	NA	NA
+"Rapeseed"	"monocrop_aviso"	"phylloc"	"q3"	0.0134430965959245	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"phylloc"	"Default"	0.0123258484610722	0.422	0.000508335494546335
+"Rapeseed"	"intercrop_aviso_RRF"	"phylloc"	"q1"	0.0105540897097625	NA	NA
+"Rapeseed"	"intercrop_aviso_RRF"	"phylloc"	"q3"	0.0140683406375296	NA	NA
