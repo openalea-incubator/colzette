@@ -12,6 +12,124 @@ from openalea.mtg import MTG
 
 from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets
 
+def BrassicaVisitor(
+        g,
+        v,
+        turtle,
+        make_leafshape = None,
+        ustride=9,
+        vstride=2,
+):
+    '''
+    Visitor that can handle an MTG file with multiple Rapeseed plants
+    This function is called by the scene3D() function when creating the 3D scene
+
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
+
+    # retrieve the node and its label
+    nid = g.node(v)
+    label = g.label(v)
+    turtle.setId(v)
+
+    if label != 'Plant':
+        turtle.rollL(nid.Phyllotaxy)
+    # turtle.rollL(137.5)
+
+    if g.edge_type(v) == '+':
+
+        turtle.setWidth(nid.PetioleDiam)
+        if label == 'Leaf':
+            leafscale = pgl.Vector3(1, nid.LeafWidth, nid.LeafLength)
+
+        turtle.down(nid.InsertionAngle)
+
+        turtle.setColor(2)
+
+        turtle.F(nid.PetioleLength)
+
+        turtle.setColor(3)
+
+        turtle.down(nid.LeafAngle - nid.InsertionAngle)
+
+        my_leaf = pgl.Scaled(leafscale, make_leafshape(u = ustride, v = vstride))
+        turtle.customGeometry(my_leaf)
+
+    if label == 'Internode':
+        turtle.setWidth(nid.StemDiam)
+        turtle.setColor(1)
+        turtle.F(nid.NodeLength)
+
+def LegumeVisitor(
+        g,
+        v,
+        turtle,
+        make_leaflet_shape = None,
+        ustride=9,
+        vstride=2,
+):
+    '''
+    Visitor that can handle an MTG file with multiple Fababean plants
+    This function is called by the scene3D() function when creating the 3D scene
+
+    :param g: (MTG) - In contains all the geometrical information needed by the visitor
+    :param v: (int) - the ID of the vertex being generated
+    :param turtle: turtle used to create the 3D space
+    :param ustride: (int) - number of triangles in u direction
+    :param vstride: (int) - number of triangles in v direction
+    '''
+
+    # retrieve the node and its label
+    nid = g.node(v)
+    label = g.label(v)
+    turtle.setId(v)
+    plant_id = g.complex_at_scale(v, scale=1)
+    coeff_width = g.node(plant_id).coeff_width
+    coeff_petiole_d = g.node(plant_id).coeff_petiole_d
+    stem_d = g.node(plant_id).stem_d
+
+    if 'PetioleLength1' in g.properties():
+        PetioleLength1 = nid.PetioleLength1
+        PetioleLength2 = nid.PetioleLength2
+    else:
+        PetioleLength1 = nid.PetioleLength
+        PetioleLength2 = nid.PetioleLength
+
+    if label != 'Plant':
+        turtle.rollL(nid.Phyllotaxy)
+
+    if g.edge_type(v) == '+':
+
+        turtle.setWidth(nid.PetioleDiam)
+        if label == 'Leaf':
+            nb_leaflets = nid.Nb_leaflets
+            leafscale = multi_leaflets(make_leaflet_shape,
+                                       nb_leaflets=int(nb_leaflets),
+                                       leaf_surface=nid.LeafSurface,
+                                       coeff_width=nid.coeff_width,
+                                       petiole_leaflet_length1=PetioleLength1,
+                                       petiole_leaflet_length2=PetioleLength2,
+                                       coeff_petiole_d=coeff_petiole_d,
+                                       stem_d=stem_d,
+                                       ustride=ustride,
+                                       vstride=vstride)
+
+        turtle.down(nid.InsertionAngle)
+
+        turtle.setColor(2)
+
+        my_leaf = leafscale
+        turtle.customGeometry(my_leaf)
+
+    if label == 'Internode':
+        turtle.setWidth(nid.StemDiam)
+        turtle.setColor(1)
+        turtle.F(nid.NodeLength)
+
 def RapeseedVisitor(
         g,
         v,
@@ -128,14 +246,13 @@ def CamelinaVisitor(
 
         turtle.down(nid.LeafAngle - nid.InsertionAngle)
 
-        my_leaf = pgl.Scaled(leafscale, make_leafshape_camelina())
+        my_leaf = pgl.Scaled(leafscale, make_leafshape_camelina(u = ustride, v = vstride))
         turtle.customGeometry(my_leaf)
 
     if label == 'Internode':
         turtle.setWidth(nid.StemDiam)
         turtle.setColor(1)
         turtle.F(nid.NodeLength)
-
 
 def FababeanVisitor(
         g,
@@ -232,7 +349,9 @@ def LentilVisitor(
                                        coeff_width=nid.coeff_width,
                                        petiole_leaflet_length=nid.PetioleLength,
                                        coeff_petiole_d=coeff_petiole_d,
-                                       stem_d=stem_d)
+                                       stem_d=stem_d,
+                                       ustride=ustride,
+                                       vstride=vstride)
 
         turtle.down(nid.InsertionAngle)
 
@@ -246,6 +365,45 @@ def LentilVisitor(
         turtle.setColor(1)
         turtle.F(nid.NodeLength)
 
+def multi_leaflets(make_leaflet_shape,
+                   nb_leaflets=5.0,
+                   leaf_surface=1.0,
+                   coeff_width=0.7,
+                   petiole_leaflet_length1=2.0,
+                   petiole_leaflet_length2=2.0,
+                   coeff_petiole_d=0.5,
+                   stem_d=0.035,
+                   ustride=9,
+                   vstride=2):
+    surface_leaflet = leaf_surface/nb_leaflets # each leaflet has the same surface
+    leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
+    leaflet_width=leaflet_length*coeff_width
+    leafscale = pgl.Vector3(1, leaflet_width, leaflet_length)
+    leafletshape = make_leaflet_shape(u=ustride, v=vstride)
+    leaflet = pgl.Scaled(leafscale,leafletshape)
+
+    if nb_leaflets < 2:
+        nb_petiole = 1
+    else:
+        nb_petiole = (nb_leaflets)//2
+    total_petiole_leaflet = petiole_leaflet_length1 + petiole_leaflet_length2*(nb_petiole-1)
+    petiole = pgl.Cylinder(radius=stem_d*coeff_petiole_d/2,height=total_petiole_leaflet)
+    leaflet_left = pgl.AxisRotated(axis=(1,0,0),angle=-radians(60),geometry=leaflet)
+    leaflet_right = pgl.AxisRotated(axis=(1,0,0),angle=radians(60),geometry=leaflet)
+    leaflets = [petiole]
+    translate = [0,0,petiole_leaflet_length1]
+    count_leaflets = nb_leaflets
+    leaflets.append(pgl.Translated(translate,leaflet_left))
+    leaflets.append(pgl.Translated(translate,leaflet_right))
+    for i in range(nb_petiole):
+        leaflets.append(pgl.Translated(translate,leaflet_left))
+        leaflets.append(pgl.Translated(translate,leaflet_right))
+        translate[2] += petiole_leaflet_length2
+        count_leaflets -=2
+    if count_leaflets == 1:
+        leaflets.append(pgl.Translated((0,0,total_petiole_leaflet),leaflet))
+    leafshape = pgl.Group(leaflets)
+    return leafshape
 
 def multi_leaflets_fababean(nb_leaflets=5.0,
                    leaf_surface=1.0,
@@ -298,7 +456,7 @@ def multi_leaflets_lentil(nb_leaflets=5.0,
     leaflet_length=2*(surface_leaflet/(coeff_width*pi))**(0.5)
     leaflet_width=leaflet_length*coeff_width
     leafscale = pgl.Vector3(1, leaflet_width, leaflet_length)
-    leafletshape_lentil = make_leaflet_shape_lentil()
+    leafletshape_lentil = make_leaflet_shape_lentil(u=ustride, v=vstride)
     leaflet = pgl.Scaled(leafscale,leafletshape_lentil)
 
     if nb_leaflets < 2:
@@ -353,22 +511,22 @@ def make_leaflet_shape_fababean(u=9, v=2):
     leafletshape_fababean=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafletshape_fababean)
 
-def make_leafshape_camelina():
+def make_leafshape_camelina(u=9, v=2):
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(0,-0.5,1), pts(0,-3,2), pts(0,-5,2.75), pts(0,0,3)]
     r2=[pts(0,0,0), pts(0,0.5,1), pts(0,3,2), pts(0,5,2.75), pts(0,0,3)]
     m=pgl.Point4Matrix([r1,r2])
-    leafshape_camelina=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafshape_camelina=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafshape_camelina)
 
-def make_leaflet_shape_lentil():
+def make_leaflet_shape_lentil(u=9, v=2):
     sc_factor = 3.173
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
     r1=[pts(0,0,0), pts(0,-1,0.1), pts(0,-2,1), pts(0,-3,2), pts(0,-1,3), pts(0,-1,3.9), pts(0,0,4)]
     r2=[pts(0,0,0), pts(0,1,0.1),  pts(0,2,1),  pts(0,3,2),  pts(0,1,3),  pts(0,1,3.9),  pts(0,0,4)]
     m=pgl.Point4Matrix([r1,r2])
-    leafletshape_lentil=pgl.BezierPatch(m, ustride=9, vstride=2)
+    leafletshape_lentil=pgl.BezierPatch(m, ustride=u, vstride=v)
     return(leafletshape_lentil)
 
 # Create MTGs for rapeseed and Fababean
