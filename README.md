@@ -54,9 +54,14 @@ This will create a conda environment with dependencies installed and install col
 
 ### Basic usage
 
-In the proper conda environment, you can either use ipython:
+Open a terminal and activate the conda environment:
 ```bash
-iptyhon
+mamba activate colzette
+```
+
+Then, you can either use ipython:
+```bash
+ipython
 ```
 ```python
 In [1]: import openalea.colzette
@@ -68,12 +73,16 @@ First install `jupyterlab` and `òpenalea.widgets`
 mamba install -c openalea3 -c conda-forge jupyterlab openalea.widgets
 ```
 
-then in `doc/examples` launch jupyter-lab
+then, if you have cloned the repository, in `doc/examples` launch jupyter-lab
 ````bash
 cd doc/examples
 jupyter-lab
 ````
-
+otherwise, you can download the notebooks, launch jupyter-lab
+```bash
+jupyter-lab
+````
+and, in the file browser on the left in jupyter-lab, look for the downloaded notebooks.
 ### Contributors
 
 Thanks to all that contribute making this package what it is !
