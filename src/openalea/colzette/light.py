@@ -1,9 +1,24 @@
 
 from openalea.caribu.CaribuScene import CaribuScene
+from openalea.astk.sky_irradiance import sky_irradiance
+from openalea.astk.sky_sources import caribu_light_sources, sky_sources
 
-def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction = (0, 0, -1)):
-    zenith = [(RG_daily, light_direction)]
-    cs = CaribuScene(scene=final_scene, light=zenith, scene_unit='cm', pattern=domain)
+def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, daydate):
+    Gif = {'longitude' : 2.151,
+           'latitude' : 48.714,
+           'altitude' : 276,
+           'timezone' : 'Europe/Paris'}
+    irr = sky_irradiance(daydate=daydate,
+                         day_ghi = RG_daily,
+                         **Gif)
+    sun, sky = sky_sources(sky_type='clear_sky',
+                           sky_irradiance=irr,
+                           scale='global')
+    
+    lights = caribu_light_sources(sun, sky)
+    
+    #zenith = [(RG_daily, (0,0,-1))]
+    cs = CaribuScene(scene=final_scene, light=lights, scene_unit='cm', pattern=domain)
     raw, agg = cs.run(infinite=True, simplify=True, direct=True)
 
     Eabs = agg["Eabs"]

@@ -150,7 +150,7 @@ def compute_thermal_time(vec_temp, idx_begin, Tb):
     vec_TT = vec_temp2.cumsum()
     return vec_TT
 
-def get_nb_leaflets(rank):
+def get_nb_leaflets_fababean(rank):
     if rank <= 6:
         nb_leaflets = 2.0
     elif rank == 7:
@@ -159,6 +159,13 @@ def get_nb_leaflets(rank):
         nb_leaflets = 5.0
     elif (rank >= 8 & rank <= 9):
         nb_leaflets = 4.0
+    return nb_leaflets
+
+def get_nb_leaflets_lentil(rank, a1, b1, a2, b2):
+    if rank <= 5:
+        nb_leaflets = round(a1 * rank + b1) * 1.0
+    else:
+        nb_leaflets = round(a2 * rank + b2) * 1.0
     return nb_leaflets
 
 class Plant:

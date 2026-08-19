@@ -6,6 +6,7 @@ from openalea.colzette.geometry import phenotype_fababean, phenotype_rapeseed, p
 from openalea.colzette.population import generate_population, generate_mixture_population
 
 def run_static_simulation(das,
+                          daydate,
                           PlantAge,
                           RG_daily,
                           TLA,
@@ -13,7 +14,7 @@ def run_static_simulation(das,
                           density,
                           dict_params,
                           type_simul="monocrop_aviso",
-                          species='Rapeseed', ustride=9, vstride=2, light_direction = (0, 0, -1)):
+                          species='Rapeseed', ustride=9, vstride=2):
 
     dict_params = dict_params[species]
 
@@ -45,7 +46,7 @@ def run_static_simulation(das,
 
         final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
-        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction=light_direction)
+        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, daydate)
 
     vec_das = [das] * nplants
     vec_TT = [PlantAge] * nplants
@@ -57,6 +58,7 @@ def run_static_simulation(das,
 
 
 def run_static_mixture_simulation(das,
+                                  daydate,
                                    RG_daily,
                                    density,
                                    dict_params,
@@ -67,7 +69,7 @@ def run_static_mixture_simulation(das,
                                    species_brassica = 'Rapeseed',
                                    species_legume = 'Fababean',
                                    sowing_option = 'rows',
-                                   Type_simul="intercrop_aviso_RRF", ustride=9, vstride=2, light_direction = (0, 0, -1)):
+                                   Type_simul="intercrop_aviso_RRF", ustride=9, vstride=2):
 
     dict_params_brassica = dict_params[species_brassica]
     dict_params_legume = dict_params[species_legume]
@@ -98,7 +100,7 @@ def run_static_mixture_simulation(das,
 
         final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
-        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction = light_direction)
+        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, daydate)
 
     vec_das = [das] * nplants
     vec_TT_brassica = [PlantAge_brassica] * nplants

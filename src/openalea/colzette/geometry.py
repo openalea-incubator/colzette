@@ -10,7 +10,7 @@ from functools import partial
 import openalea.plantgl.all as pgl
 from openalea.mtg import MTG
 
-from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets
+from openalea.colzette.colzette import update_MTG, bell_shaped_dist, get_nb_leaflets_fababean, get_nb_leaflets_lentil
 
 def RapeseedVisitor(
         g,
@@ -325,6 +325,15 @@ def multi_leaflets_lentil(nb_leaflets=5.0,
     return leafshape_lentil
 
 # Functions to generate leaf shapes (with leaflets for Fababean)
+def make_leafshape_rapeseed_test(u=9, v=2):
+    sc_factor = 3.572567770618656
+    pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
+    r1=[pts(0,0,0), pts(0,-0.5,1), pts(-10,-3,2), pts(-30,-5,2.75), pts(-30,0,3)]
+    r2=[pts(0,0,0), pts(0,0.5,1), pts(-10,3,2), pts(-30,5,2.75), pts(-30,0,3)]
+    m=pgl.Point4Matrix([r1,r2])
+    leafshape_rapeseed=pgl.BezierPatch(m, ustride=u, vstride=v)
+    return(leafshape_rapeseed)
+
 def make_leafshape_rapeseed(u=9, v=2):
     sc_factor = 3.572567770618656
     pts = lambda x,y,z : pgl.Vector4(x/sc_factor,y/sc_factor,z/sc_factor,1.0)
@@ -392,7 +401,7 @@ def vegetative(
     elif species == 'Rapeseed' or species == 'Camelina':
         growth_node = dict_params['growth_node']
         node_length = DJ * growth_node
-
+    #print(node_length)
     g = MTG()
     vid = g.add_component(g.root,
                           label='Plant',
@@ -440,6 +449,7 @@ def phenotype_rapeseed(g,
     phyllot = dict_params_rape['phyllot']  # float = 137.5,
     ins_angle = dict_params_rape['ins_angle']  # float = 60,
     leaf_angle = 80.0  # à mesurer expérimentallement
+    #leaf_angle = ins_angle
     coeff_width = dict_params_rape['coeff_width_leaf']  # float =0.831562,
     coeff_petiole = dict_params_rape['coeff_petiole_leaf']  # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
     stem_d = 0.1
@@ -572,7 +582,7 @@ def phenotype_fababean(g,
     leaves = [k for k, v in g.properties()['label'].items() if v == 'Leaf']
     internodes = [k for k, v in g.properties()['label'].items() if v == 'Internode']
     ranks = [i for i in range(1, len(leaves) + 1)]
-    nb_leaflets = [get_nb_leaflets(ri) for ri in ranks]
+    nb_leaflets = [get_nb_leaflets_fababean(ri) for ri in ranks]
 
     output['Nb_leaflets'] = dict(zip(leaves, nb_leaflets))
     vec_coeff_width = [coeff_width1] * 2 + [coeff_width2] * (len(leaves) - 2)
@@ -633,9 +643,13 @@ def phenotype_lentil(g,
     phyllot = dict_params_lent['phyllot']  # float = 163.5
     ins_angle = dict_params_lent['ins_angle']  # float = 60
     leaf_angle: float = 110  # à mesurer expérimentallement
-    coeff_width = dict_params_lent['coeff_width_leaflet']  # float =0.831562
+    coeff_width = dict_params_lent['coeff_width_leaf']  # float =0.831562
     coeff_petiole_leaflet = dict_params_lent[
         'coeff_petiole_leaflet']  # float =0.51017, #limb length to petiole length , 0.31017 length/whole leag length
+    a1 = dict_params_lent['a1_leaflet_number']
+    a2 = dict_params_lent['a2_leaflet_number']
+    b1 = dict_params_lent['b1_leaflet_number']
+    b2 = dict_params_lent['b2_leaflet_number']
     stem_d = 0.1
     coeff_petiole_d = 0.8
 
@@ -644,7 +658,7 @@ def phenotype_lentil(g,
     leaves = [k for k, v in g.properties()['label'].items() if v == 'Leaf']
     internodes = [k for k, v in g.properties()['label'].items() if v == 'Internode']
     ranks = [i for i in range(1, len(leaves) + 1)]
-    nb_leaflets = [get_nb_leaflets(ri) for ri in ranks]
+    nb_leaflets = [get_nb_leaflets_lentil(ri, a1, b1, a2, b2) for ri in ranks]
 
     output['Nb_leaflets'] = dict(zip(leaves, nb_leaflets))
     vec_coeff_width = [coeff_width] * len(leaves)
