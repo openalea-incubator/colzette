@@ -4,6 +4,7 @@ A Parametric Model for oilseed rape and legume
 """
 
 from importlib.metadata import version, PackageNotFoundError
+from openalea.colzette.wrapper import Colzette
 
 try:
     __version__ = version("openalea.colzette")

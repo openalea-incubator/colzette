@@ -2,11 +2,16 @@ name: colzette_dev
 channels:
   - openalea3
   - conda-forge
+channel_priority: strict
 dependencies:
   - python
   - pip
+  - numpy
+  - pandas
   - openalea.mtg
   - openalea.plantgl
   - openalea.caribu
+  - openalea.widgets
+
   - pip:
       - -e .."[test,doc]"
