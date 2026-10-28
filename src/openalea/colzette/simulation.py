@@ -34,6 +34,7 @@ def run_static_simulation(das,
 
     if TLA == 0.0:
         vec_Eabs = [0] * nplants
+        vec_area = [0] * nplants
         final_scene = None
         caribu_scene = None
         raw = None
@@ -45,13 +46,15 @@ def run_static_simulation(das,
 
         final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
-        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction=light_direction)
+        caribu_scene, vec_Eabs, vec_area, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction=light_direction)
 
     vec_das = [das] * nplants
     vec_TT = [PlantAge] * nplants
     sub_dat = pd.DataFrame({'DAS': vec_das,
                             'TT': vec_TT,
                             'Plant': range(0, nplants),
+                            'Species': sowing_pattern['species'].values,
+                            'leaf_area': vec_area,
                             'Eabs': vec_Eabs})
     return (final_scene, caribu_scene, sub_dat, raw, agg)
 
@@ -81,6 +84,7 @@ def run_static_mixture_simulation(das,
     nplants = len(sowing_pattern)
     if TLA_brassica == 0.0 and TLA_legume == 0.0:
         vec_Eabs = [0] * nplants
+        vec_area = [0] * nplants
         final_scene = None
         caribu_scene = None
         raw = None
@@ -98,7 +102,7 @@ def run_static_mixture_simulation(das,
 
         final_scene, shapes_indexer = create_scene(list_of_MTGs, list_of_positions, sowing_pattern, ustride=ustride, vstride=vstride)
 
-        caribu_scene, vec_Eabs, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction = light_direction)
+        caribu_scene, vec_Eabs, vec_area, raw, agg = light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, domain, light_direction = light_direction)
 
     vec_das = [das] * nplants
     vec_TT_brassica = [PlantAge_brassica] * nplants
@@ -107,5 +111,7 @@ def run_static_mixture_simulation(das,
                             'TT_brassica': vec_TT_brassica,
                             'TT_legume': vec_TT_legume,
                             'Plant': range(0, nplants),
+                            'Species': sowing_pattern['species'].values,
+                            'leaf_area': vec_area,
                             'Eabs': vec_Eabs})
     return (final_scene, caribu_scene, sub_dat, raw, agg)
