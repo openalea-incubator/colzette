@@ -18,26 +18,35 @@ def parameter(value, description: str, genre: str, min_value: float = None, max_
 
 SCENARIOS = {
     "mono_brassica": {
-        "species_brassica": "Rapeseed",
-        "species_legume": None,
+        "specie_brassica": "Rapeseed",
+        "type_brassica": "intercrop_vigo",
+        "specie_legume": None,
+        "type_legume": None,
         "Type_simul": "monocrop_vigo",
         "sowing_option": "rows"
     },
 
     "mono_legume": {
-        "species_brassica": None,
-        "species_legume": "Fababean",
+        "specie_brassica": None,
+        "type_brassica": None,
+        "specie_legume": "Fababean",
+        "type_legume": "intercrop_faba_vigo",
         "Type_simul": "monocrop_vigo",
         "sowing_option": "rows"
     },
 
     "intercrop": {
-        "species_brassica": "Rapeseed",
-        "species_legume": "Fababean",
+        "specie_brassica": "Rapeseed",
+        "type_brassica": "intercrop_vigo",
+        "specie_legume": "Fababean",
+        "type_legume": "intercrop_faba_vigo",
         "Type_simul": "intercrop_vigo",
         "sowing_option": "rows"
     }
 }
+
+scenario_monocrop_brassica = SCENARIOS["mono_brassica"]
+scenario_intercrop_brassica_faba = SCENARIOS["intercrop"]
 
 
 @dataclass
@@ -54,6 +63,8 @@ class Colzette:
     type_legume: str = None
 
     stand_option: str = 'plot'
+
+    sowing_option: str = 'rows'
 
     density: int = 33
 
@@ -216,7 +227,7 @@ class Colzette:
             lambda self: self.climatic_inputs["TT_legume"].iloc[self.day_index] if self.specie_legume is not None else None
         )
         type(self).RG_daily = property(
-            lambda self: self.climatic_inputs["PAR"].iloc[self.day_index] * 100
+            lambda self: self.climatic_inputs["PAR"].iloc[self.day_index]  # J/cm2 -> J/m2, as expected by CARIBU
         )
 
         # Importing Total Leaf Area from default path
@@ -286,6 +297,7 @@ class Colzette:
             PlantAge_legume=self.PlantAge_legume,
             species_brassica=self.specie_brassica,
             species_legume=self.specie_legume,
+            sowing_option=self.sowing_option,
             option_plants=self.stand_option,
             Type_simul=self.Type_simul, ustride=9, vstride=2, light_direction=(0, 0, -1))
 
@@ -330,3 +342,116 @@ class Colzette:
         clim2['TT_brassica'] = compute_thermal_time(vec_temp=clim2['TM'], idx_begin=0, Tb=brassica)
         clim2['TT_legume'] = compute_thermal_time(vec_temp=clim2['TM'], idx_begin=idx_legume-1, Tb=Tb_legume)
         return clim2
+
+    @property
+    def plant_outputs(self):
+        """Per-plant time series: one row per plant and per simulated day.
+
+        leaf_area is the plant leaf area (m2), absolute_energy the PAR absorbed by its leaves that day (J)
+        and absolute_energy_cum its cumulated value since sowing.
+        """
+        if not self.dfs:
+            return pd.DataFrame()
+        df = pd.concat(self.dfs, ignore_index=True).rename(columns={"Eabs": "absolute_energy"})
+        df["absolute_energy_cum"] = df.groupby("Plant")["absolute_energy"].cumsum()
+        return df
+
+    @property
+    def species_outputs(self):
+        """Per-species time series: one row per species and per simulated day.
+
+        leaf_area and absolute_energy are summed over the plants of the species,
+        absolute_energy_mean is the average per plant, absolute_energy_cum_plant its cumulated value since sowing.
+        """
+        df = self.plant_outputs
+        if df.empty:
+            return df
+        keys = ["DAS"] + [c for c in df.columns if c.startswith("TT")] + ["Species"]
+        sp = df.groupby(keys, as_index=False, dropna=False, sort=False).agg(
+            n_plants=("Plant", "count"),
+            leaf_area=("leaf_area", "sum"),
+            leaf_area_mean=("leaf_area", "mean"),
+            absolute_energy=("absolute_energy", "sum"),
+            absolute_energy_mean=("absolute_energy", "mean"))
+        sp["absolute_energy_cum"] = sp.groupby("Species")["absolute_energy"].cumsum()
+        sp["absolute_energy_cum_plant"] = sp.groupby("Species")["absolute_energy_mean"].cumsum()
+        return sp
+
+    @property
+    def rapeseed_outputs(self):
+        specie = "Rapeseed"
+        df = self.species_outputs
+        if specie in df["Species"].values:
+            return df[df["Species"] == specie]
+        else:
+            raise KeyError(f"No {specie} in the simulation")
+
+    @property
+    def faba_outputs(self):
+        specie = "Fababean"
+        df = self.species_outputs
+        if specie in df["Species"].values:
+            return df[df["Species"] == specie]
+        else:
+            raise KeyError(f"No {specie} in the simulation")
+
+    @property
+    def last_day_rapeseed(self):
+        df = self.rapeseed_outputs
+        return df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+
+    @property
+    def last_day_faba(self):
+        df = self.faba_outputs
+        return df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+
+    def plot_scene(self, day=-1, variable="Eabs", color_map=None, plot=None, as_html=False, height=500):
+        """3D view of the scene of a simulated day, each organ colored by its CARIBU output, with a colorbar.
+
+        day is a position in the simulated days (as in self.times), -1 for the last one.
+        variable is a key of the CARIBU aggregated outputs: "Eabs" (J/m2 of organ), "Ei", "area" (m2)...
+        Returns a k3d plot, displayed when it is the last expression of a notebook cell.
+        With as_html=True, returns instead a standalone HTML view, for notebook front-ends that do not render
+        the k3d widget (e.g. VS Code).
+        """
+        import k3d
+        from openalea.plantgl.all import Tesselator
+
+        scene, agg = self.list_scene[day], self.list_agg[day]
+        if scene is None:
+            raise ValueError(f"Nothing to plot at DAS {self.times[day]}: no leaf area yet")
+        values = agg[variable]
+
+        tesselator = Tesselator()
+        vertices, indices, attribute = [], [], []
+        for shape in scene:
+            if shape.id not in values:
+                continue
+            shape.geometry.apply(tesselator)
+            mesh = tesselator.discretization
+            offset = len(vertices)
+            vertices.extend((p.x, p.y, p.z) for p in mesh.pointList)
+            indices.extend([i + offset for i in index] for index in mesh.indexList)
+            # one value per organ, repeated on all its vertices
+            attribute.extend([values[shape.id]] * len(mesh.pointList))
+
+        if plot is None:
+            plot = k3d.plot()
+        organs = k3d.mesh(np.array(vertices, dtype=np.float32),
+                          np.array(indices, dtype=np.uint32),
+                          attribute=np.array(attribute, dtype=np.float32),
+                          color_map=color_map if color_map is not None else k3d.basic_color_maps.Jet,
+                          color_range=[min(attribute), max(attribute)],
+                          side="double")
+        plot += organs
+        plot.colorbar_object_id = organs.id
+        plot += k3d.text2d(f"{variable}, DAS {self.times[day]}", position=(0.01, 0.01), is_html=False)
+        if as_html:
+            import html
+            import warnings
+            from IPython.display import HTML
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")  # IPython suggests IFrame, which needs a file or URL
+                return HTML(f'<iframe srcdoc="{html.escape(plot.get_snapshot())}" '
+                            f'style="width: 100%; height: {height}px; border: none;"></iframe>')
+        return plot

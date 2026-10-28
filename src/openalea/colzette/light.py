@@ -10,6 +10,7 @@ def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, doma
     area = agg["area"]
 
     vec_Eabs = []
+    vec_area = []
     for plant_index in range(0, len(list_of_MTGs)):
         g = list_of_MTGs[plant_index]
         shapes_plant = shapes_indexer[plant_index]
@@ -23,6 +24,8 @@ def light_interception(final_scene, shapes_indexer, list_of_MTGs, RG_daily, doma
         area_plant = {k: v for k, v in area.items() if k in new_indices_plant}
         area_leaves = {k: v for k, v in area_plant.items() if k in new_indices_leaf}
 
-        intercepted_light = sum([Eabs_leaves[k] * area_leaves[k] for k in Eabs_leaves])  # in J/cm2
+        # Eabs is a surfacic density (light unit per m2) and area is in m2, so this is the energy absorbed by the plant leaves
+        intercepted_light = sum([Eabs_leaves[k] * area_leaves[k] for k in Eabs_leaves])
         vec_Eabs.append(intercepted_light)
-    return cs, vec_Eabs, raw, agg
+        vec_area.append(sum(area_leaves.values()))  # in m2
+    return cs, vec_Eabs, vec_area, raw, agg
