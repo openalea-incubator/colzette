@@ -10,7 +10,7 @@ _________________
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/openalea-incubator/colzette.git/HEAD?urlpath=%2Fdoc%2Ftree%2Fdoc%2Fexamples%2Findex.ipynb)
 _________________
 
-**colzette** A Parametric Model for oilseed rape and legume.
+**colzette** A Parametric Model for oilseed rape and legume intercropping.
 
 <figure>
     <img src="doc/_static/intercrop_example.png" />
