@@ -12,3 +12,6 @@ dependencies:
   - openalea.caribu
   - openalea.widgets
   - ipykernel
+
+  - pip:
+      - -e .."[test,doc]"
