@@ -1,12 +1,14 @@
 name: colzette_dev
 channels:
-  - openalea3
   - conda-forge
+  - openalea3
 dependencies:
   - python
   - pip
+  - numpy
+  - pandas
   - openalea.mtg
   - openalea.plantgl
   - openalea.caribu
-  - pip:
-      - -e .."[test,doc]"
+  - openalea.widgets
+  - ipykernel
