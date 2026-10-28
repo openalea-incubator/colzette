@@ -33,5 +33,6 @@ jobs:
     uses: openalea/action-build-publish-anaconda/.github/workflows/openalea_ci.yml@main
     with:
       python-minor-version: '[11, 12, 13]'
+      channel_priority: flexible
     secrets:
       anaconda_token: ${{ secrets.ANACONDA_TOKEN }}
