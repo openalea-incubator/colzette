@@ -88,3 +88,6 @@ out
 # this repo
 results/
 archive/results/
+
+# fichier excel
+*.xlsx
