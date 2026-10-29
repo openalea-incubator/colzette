@@ -1,4 +1,5 @@
 import sys, os
+import json
 import pandas as pd
 import numpy as np
 from dataclasses import dataclass, field, fields
@@ -8,6 +9,52 @@ from pathlib import Path
 from openalea.colzette.colzette import compute_thermal_time, get_params_intercrop
 from openalea.colzette.simulation import run_static_simulation, run_static_mixture_simulation
 from openalea.colzette.data import data_dir
+
+
+# Play/pause button and day slider added to the standalone HTML view of Colzette.animate_scene,
+# driving the k3d viewer (K3DInstance) through its public API; __TIMES__ is the list of animated DAS
+_PLAYER_JS = """
+(function (k3d, times) {
+    var bar = document.createElement('div');
+    bar.id = 'colzette-player';
+    bar.style.cssText = 'position:absolute;left:8px;right:8px;bottom:8px;z-index:10;display:flex;'
+        + 'align-items:center;gap:8px;padding:4px 8px;border-radius:4px;'
+        + 'background:rgba(255,255,255,0.85);font:13px sans-serif;';
+    var button = document.createElement('button');
+    button.style.cssText = 'width:2.5em;cursor:pointer;';
+    var slider = document.createElement('input');
+    slider.type = 'range';
+    slider.min = 0;
+    slider.max = times.length - 1;
+    slider.step = 1;
+    slider.style.flex = '1';
+    var label = document.createElement('span');
+    bar.append(button, slider, label);
+    document.body.appendChild(bar);
+    // k3d colorbar is pinned at the bottom left (inline style): move it above the bar
+    var style = document.createElement('style');
+    style.textContent = '.colorMapLegend { bottom: 50px !important; }';
+    document.head.appendChild(style);
+
+    var playing = false;
+    function showPlaying(state) {
+        playing = state;
+        button.textContent = state ? '\\u23F8' : '\\u25B6';
+    }
+    function showTime(t) {
+        var i = 0;
+        times.forEach(function (x, j) { if (Math.abs(x - t) < Math.abs(times[i] - t)) i = j; });
+        slider.value = i;
+        label.textContent = 'DAS ' + times[i];
+    }
+    button.onclick = function () { playing ? k3d.stopAutoPlay() : k3d.startAutoPlay(); };
+    slider.oninput = function () { k3d.stopAutoPlay(); k3d.setTime(times[slider.value]); };
+    k3d.on('autoPlayChange', showPlaying);
+    k3d.on('timeChange', showTime);
+    showPlaying(false);
+    showTime(k3d.parameters.time);
+})(K3DInstance, __TIMES__);
+"""
 
 
 def parameter(value, description: str, genre: str, min_value: float = None, max_value: float = None):
@@ -191,18 +238,18 @@ class Colzette:
         
         # Superimpose parameter values from fields
         if self.specie_brassica is not None:
-            brassica_parameters = [p for p in self.parameters() if p.metadata["genre"] == "brassica"]
+            brassica_parameters = [p for p in self._parameter_fields() if p.metadata["genre"] == "brassica"]
             for p in brassica_parameters:
                 genre = p.metadata["genre"]
                 p_name = p.name[:p.name.find(genre)-1]
-                self.dict_params[self.specie_brassica][p_name] = p.default
+                self.dict_params[self.specie_brassica][p_name] = getattr(self, p.name)
         
         if self.specie_legume is not None:
-            legume_parameters = [p for p in self.parameters() if p.metadata["genre"] == "legume"]
+            legume_parameters = [p for p in self._parameter_fields() if p.metadata["genre"] == "legume"]
             for p in legume_parameters:
                 genre = p.metadata["genre"]
                 p_name = p.name[:p.name.find(genre)-1]
-                self.dict_params[self.specie_legume][p_name] = p.default
+                self.dict_params[self.specie_legume][p_name] = getattr(self, p.name)
 
         # Importing climatic inputs from default path
         self.climatic_inputs = self.init_climatic_inputs()
@@ -227,7 +274,7 @@ class Colzette:
             lambda self: self.climatic_inputs["TT_legume"].iloc[self.day_index] if self.specie_legume is not None else None
         )
         type(self).RG_daily = property(
-            lambda self: self.climatic_inputs["PAR"].iloc[self.day_index]  # J/cm2 -> J/m2, as expected by CARIBU
+            lambda self: self.climatic_inputs["PAR"].iloc[self.day_index]
         )
 
         # Importing Total Leaf Area from default path
@@ -278,11 +325,26 @@ class Colzette:
                 ustride=ustride, vstride=vstride, light_direction=light_direction)
         return scene, caribu_scene, sub_dat, raw, agg
 
-    def run(self, *args, **kwds):
-        while self.day_index < self.simulation_length:
+    def run(self, day=None):
+        """Run the simulation.
+
+        Without argument, simulates every remaining day. Each day only depends on its own inputs (thermal time,
+        TLA, PAR), so das can be a single DAS or a list of DAS to simulate only those days: outputs keep the
+        same structure, with one entry per simulated day (cumulated outputs then only sum the simulated days).
+        """
+        if day is None:
+            days = list(range(self.day_index, self.simulation_length))
+        else:
+            days = [day] if np.isscalar(day) else list(day)
+            for d in days:
+                if not 0 <= d < self.simulation_length:
+                    raise ValueError(f"DAS {d} out of the simulated period [0, {self.simulation_length - 1}]")
+        for d in days:
+            self.day_index = d
             self.__call__()
             self.log()
-            self.day_index += 1
+        if days:
+            self.day_index = days[-1] + 1
 
 
     def __call__(self):
@@ -316,9 +378,24 @@ class Colzette:
         self.list_agg.append(self.agg)
     
     @classmethod
-    def parameters(cls):
+    def _parameter_fields(cls):
         fds = [f for f in fields(cls) if len(f.metadata) > 0]
         return [f for f in fds if f.metadata["variable_type"] == "parameter"]
+
+    @classmethod
+    def parameters(cls):
+        rows = []
+        for p in cls._parameter_fields():
+            rows.append({
+                "Nom": p.name,
+                "Description": p.metadata["description"],
+                "Défaut": p.default,
+                "Min": p.metadata["min_value"],
+                "Max": p.metadata["max_value"],
+            })
+
+        df = pd.DataFrame(rows)
+        return df
     
     def init_climatic_inputs(self):
         """
@@ -395,15 +472,21 @@ class Colzette:
         else:
             raise KeyError(f"No {specie} in the simulation")
 
-    @property
-    def last_day_rapeseed(self):
+    def last_day_rapeseed(self, prop: str = None):
         df = self.rapeseed_outputs
-        return df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+        filtered = df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+        if prop is None:
+            return filtered
+        else:
+            return float(filtered[prop].item())
 
-    @property
-    def last_day_faba(self):
+    def last_day_faba(self, prop: str = None):
         df = self.faba_outputs
-        return df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+        filtered = df[df["DAS"] == df["DAS"].max()].reset_index(drop=True)
+        if prop is None:
+            return filtered
+        else:
+            return float(filtered[prop].item())
 
     def plot_scene(self, day=-1, variable="Eabs", color_map=None, plot=None, as_html=False, height=500):
         """3D view of the scene of a simulated day, each organ colored by its CARIBU output, with a colorbar.
@@ -415,16 +498,83 @@ class Colzette:
         the k3d widget (e.g. VS Code).
         """
         import k3d
+
+        if self.list_scene[day] is None:
+            raise ValueError(f"Nothing to plot at DAS {self.times[day]}: no leaf area yet")
+        vertices, indices, attribute = self._organ_mesh(day, variable)
+
+        if plot is None:
+            plot = k3d.plot()
+        organs = k3d.mesh(vertices, indices, attribute=attribute,
+                          color_map=color_map if color_map is not None else k3d.basic_color_maps.Jet,
+                          color_range=[float(attribute.min()), float(attribute.max())],
+                          side="double")
+        plot += organs
+        plot.colorbar_object_id = organs.id
+        plot += k3d.text2d(f"{variable}, DAS {self.times[day]}", position=(0.01, 0.01), is_html=False)
+        return self._k3d_output(plot, as_html, height)
+
+    def animate_scene(self, variable="Eabs", days=None, color_map=None, plot=None, as_html=False, height=500,
+                      fps=4, autoplay=True):
+        """Same view as plot_scene, with a time slider over the simulated days.
+
+        With as_html=True, a play/pause button and a slider over the simulated days are added at the bottom of
+        the view, and with autoplay=True the animation loops as soon as it is displayed.
+        The k3d widget only has its own controls, in its menu (top right: Controls > Animation, folder closed by
+        default), and cannot start by itself: call .start_auto_play() on the returned plot once it is displayed.
+
+        Time is the DAS; fps is the number of simulated days shown per second.
+        days is a list of positions in the simulated days (as in self.times), default all days with leaves.
+        The colorbar range is common to all days so that colors can be compared over time.
+        Each day adds its whole geometry to the plot: subsample days (e.g. days=range(0, len(c.times), 7))
+        to keep it light, especially with as_html=True.
+        """
+        import k3d
+
+        if days is None:
+            days = range(len(self.times))
+        days = [d for d in days if self.list_scene[d] is not None]
+        if not days:
+            raise ValueError("Nothing to plot: no simulated day with leaf area")
+
+        vertices, indices, attribute, labels = {}, {}, {}, {}
+        for d in days:
+            t = str(self.times[d])  # k3d time key, here the DAS
+            vertices[t], indices[t], attribute[t] = self._organ_mesh(d, variable)
+            labels[t] = f"{variable}, DAS {self.times[d]}"
+
+        if plot is None:
+            plot = k3d.plot()
+        organs = k3d.mesh(vertices, indices, attribute=attribute,
+                          color_map=color_map if color_map is not None else k3d.basic_color_maps.Jet,
+                          color_range=[float(min(a.min() for a in attribute.values())),
+                                       float(max(a.max() for a in attribute.values()))],
+                          side="double")
+        plot += organs
+        plot.colorbar_object_id = organs.id
+        plot += k3d.text2d(labels, position=(0.01, 0.01), is_html=False)
+        # organs change from one day to the next: show the nearest simulated day instead of interpolating
+        plot.time_interpolation = False
+        plot.time = float(self.times[days[0]])
+        # k3d updates the view fps times per second and advances time_speed DAS per second:
+        # move by one simulated day at each update
+        step = float(np.median(np.diff([self.times[d] for d in days]))) if len(days) > 1 else 1.0
+        plot.fps = fps
+        plot.time_speed = fps * step
+        # run by the standalone HTML view once loaded, ignored by the k3d widget
+        js = _PLAYER_JS.replace("__TIMES__", json.dumps([self.times[d] for d in days]))
+        if autoplay:
+            js += "K3DInstance.startAutoPlay();"
+        return self._k3d_output(plot, as_html, height, js)
+
+    def _organ_mesh(self, day, variable):
+        """Vertices, triangles and per-vertex values of the organs of a simulated day, one value per organ."""
         from openalea.plantgl.all import Tesselator
 
-        scene, agg = self.list_scene[day], self.list_agg[day]
-        if scene is None:
-            raise ValueError(f"Nothing to plot at DAS {self.times[day]}: no leaf area yet")
-        values = agg[variable]
-
+        values = self.list_agg[day][variable]
         tesselator = Tesselator()
         vertices, indices, attribute = [], [], []
-        for shape in scene:
+        for shape in self.list_scene[day]:
             if shape.id not in values:
                 continue
             shape.geometry.apply(tesselator)
@@ -434,24 +584,19 @@ class Colzette:
             indices.extend([i + offset for i in index] for index in mesh.indexList)
             # one value per organ, repeated on all its vertices
             attribute.extend([values[shape.id]] * len(mesh.pointList))
+        return (np.array(vertices, dtype=np.float32),
+                np.array(indices, dtype=np.uint32),
+                np.array(attribute, dtype=np.float32))
 
-        if plot is None:
-            plot = k3d.plot()
-        organs = k3d.mesh(np.array(vertices, dtype=np.float32),
-                          np.array(indices, dtype=np.uint32),
-                          attribute=np.array(attribute, dtype=np.float32),
-                          color_map=color_map if color_map is not None else k3d.basic_color_maps.Jet,
-                          color_range=[min(attribute), max(attribute)],
-                          side="double")
-        plot += organs
-        plot.colorbar_object_id = organs.id
-        plot += k3d.text2d(f"{variable}, DAS {self.times[day]}", position=(0.01, 0.01), is_html=False)
+    @staticmethod
+    def _k3d_output(plot, as_html, height, additional_js_code=""):
         if as_html:
             import html
             import warnings
             from IPython.display import HTML
+            snapshot = plot.get_snapshot(additional_js_code=additional_js_code)
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")  # IPython suggests IFrame, which needs a file or URL
-                return HTML(f'<iframe srcdoc="{html.escape(plot.get_snapshot())}" '
+                return HTML(f'<iframe srcdoc="{html.escape(snapshot)}" '
                             f'style="width: 100%; height: {height}px; border: none;"></iframe>')
         return plot

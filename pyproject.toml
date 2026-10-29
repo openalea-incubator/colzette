@@ -62,7 +62,6 @@ doc = [
   "pydata-sphinx-theme",
   "myst-parser",
   "sphinx-favicon",
-  "ipykernel",
   "sphinx-copybutton",
   "ipython_genutils",
   "nbsphinx",
@@ -77,6 +76,8 @@ channels = [
 dependencies = [
     "numpy",
     "pandas",
+    "k3d",
+    "ipykernel",
     "openalea.mtg",
     "openalea.plantgl",
     "openalea.caribu",
