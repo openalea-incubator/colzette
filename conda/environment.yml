@@ -7,6 +7,7 @@ dependencies:
   - pip
   - numpy
   - pandas
+  - k3d
   - openalea.mtg
   - openalea.plantgl
   - openalea.caribu
